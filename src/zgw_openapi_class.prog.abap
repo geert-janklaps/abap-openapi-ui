@@ -7,15 +7,15 @@ CLASS lcl_screen_handler DEFINITION CREATE PRIVATE.
     CLASS-METHODS handle_pai IMPORTING iv_ok_code TYPE syucomm.
 
     TYPES: BEGIN OF ty_v2_service_s,
-             service_name    TYPE	/iwfnd/med_mdl_service_grp_id,
+             service_name    TYPE /iwfnd/med_mdl_service_grp_id,
              service_version TYPE /iwfnd/med_mdl_version,
              description     TYPE /iwfnd/med_mdl_srg_description,
            END OF ty_v2_service_s.
 
     TYPES: BEGIN OF ty_v4_service_s,
-             group_id        TYPE	/iwbep/v4_med_group_id,
+             group_id        TYPE /iwbep/v4_med_group_id,
              repository_id   TYPE /iwbep/v4_med_repository_id,
-             service_id      TYPE	/iwbep/v4_med_service_id,
+             service_id      TYPE /iwbep/v4_med_service_id,
              service_version TYPE /iwbep/v4_med_service_version,
              description     TYPE /iwbep/v4_reg_description,
            END OF ty_v4_service_s.
@@ -171,7 +171,6 @@ CLASS lcl_screen_handler IMPLEMENTATION.
         READ TABLE gt_v2_data INTO DATA(ls_v2_data) INDEX row.
 
         zcl_gw_openapi=>launch_bsp(
-          EXPORTING
             iv_external_service = ls_v2_data-service_name
             iv_version          = ls_v2_data-service_version
             iv_json             = p_json ).
@@ -182,7 +181,6 @@ CLASS lcl_screen_handler IMPLEMENTATION.
         READ TABLE gt_v4_data INTO DATA(ls_v4_data) INDEX row.
 
         zcl_gw_openapi=>launch_bsp(
-          EXPORTING
             iv_external_service = CONV /iwfnd/med_mdl_service_grp_id( ls_v4_data-service_id )
             iv_version          = ls_v4_data-service_version
             iv_repository       = ls_v4_data-repository_id
