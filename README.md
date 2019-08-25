@@ -1,4 +1,4 @@
-[![build status](https://gitlab.com/geertjanklaps/abap-openapi-ui/badges/%{current_branch}/build.svg)](https://gitlab.com/geertjanklaps/abap-openapi-ui/commits/%{current_branch})
+[![build status](https://gitlab.com/geertjanklaps/abap-openapi-ui/badges/development/build.svg)](https://gitlab.com/geertjanklaps/abap-openapi-ui/commits/development)
 # ABAP OpenAPI UI
 
 OpenAPI integration for SAP NetWeaver Gateway
