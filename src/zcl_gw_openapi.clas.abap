@@ -1,37 +1,37 @@
-class ZCL_GW_OPENAPI definition
-  public
-  final
-  create public .
+CLASS zcl_gw_openapi DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  class-methods GENERATE_OPENAPI_JSON_V2
-    importing
-      !IV_EXTERNAL_SERVICE type /IWFND/MED_MDL_SERVICE_GRP_ID
-      !IV_VERSION type /IWFND/MED_MDL_VERSION default '0001'
-      !IV_BASE_URL type STRING optional
-    exporting
-      !EV_METADATA type XSTRING
-      !EV_METADATA_STRING type STRING .
-  class-methods GENERATE_OPENAPI_JSON_V4
-    importing
-      !IV_REPOSITORY type /IWBEP/V4_MED_REPOSITORY_ID
-      !IV_GROUP_ID type /IWBEP/V4_MED_GROUP_ID
-      !IV_SERVICE type /IWBEP/V4_MED_SERVICE_ID
-      !IV_VERSION type /IWBEP/V4_MED_SERVICE_VERSION default '0001'
-      !IV_BASE_URL type STRING
-    exporting
-      !EV_METADATA type XSTRING
-      !EV_METADATA_STRING type STRING .
-  class-methods LAUNCH_BSP
-    importing
-      !IV_EXTERNAL_SERVICE type /IWFND/MED_MDL_SERVICE_GRP_ID
-      !IV_VERSION type /IWFND/MED_MDL_VERSION default '0001'
-      !IV_REPOSITORY type /IWBEP/V4_MED_REPOSITORY_ID optional
-      !IV_GROUP_ID type /IWBEP/V4_MED_GROUP_ID optional
-      !IV_JSON type XFELD optional .
-protected section.
-private section.
+    CLASS-METHODS generate_openapi_json_v2
+      IMPORTING
+        !iv_external_service TYPE /iwfnd/med_mdl_service_grp_id
+        !iv_version          TYPE /iwfnd/med_mdl_version DEFAULT '0001'
+        !iv_base_url         TYPE string OPTIONAL
+      EXPORTING
+        !ev_metadata         TYPE xstring
+        !ev_metadata_string  TYPE string .
+    CLASS-METHODS generate_openapi_json_v4
+      IMPORTING
+        !iv_repository      TYPE /iwbep/v4_med_repository_id
+        !iv_group_id        TYPE /iwbep/v4_med_group_id
+        !iv_service         TYPE /iwbep/v4_med_service_id
+        !iv_version         TYPE /iwbep/v4_med_service_version DEFAULT '0001'
+        !iv_base_url        TYPE string
+      EXPORTING
+        !ev_metadata        TYPE xstring
+        !ev_metadata_string TYPE string .
+    CLASS-METHODS launch_bsp
+      IMPORTING
+        !iv_external_service TYPE /iwfnd/med_mdl_service_grp_id
+        !iv_version          TYPE /iwfnd/med_mdl_version DEFAULT '0001'
+        !iv_repository       TYPE /iwbep/v4_med_repository_id OPTIONAL
+        !iv_group_id         TYPE /iwbep/v4_med_group_id OPTIONAL
+        !iv_json             TYPE xfeld OPTIONAL .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -39,7 +39,7 @@ ENDCLASS.
 CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
 
-  METHOD GENERATE_OPENAPI_JSON_V2.
+  METHOD generate_openapi_json_v2.
     DATA: lt_parameters     TYPE abap_trans_parmbind_tab,
           lv_version        TYPE string,
           lv_service        TYPE string,
@@ -65,8 +65,7 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 *     Get main odata node
       DATA(lv_icf_lib_guid) = lo_icf_access->get_node_guid_wo_at(
                                 iv_icf_parent_guid = ls_icfdocu-icfparguid
-                                iv_icf_node_name   = CONV icfaltnme( ls_icfdocu-icf_name )
-                              ).
+                                iv_icf_node_name   = CONV icfaltnme( ls_icfdocu-icf_name ) ).
 
     ENDLOOP.
 
@@ -133,8 +132,7 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
       EXPORTING
         iv_load_last_modified_only = abap_true
         iv_is_busi_data_request    = abap_true
-        iv_do_cache_handshake      = abap_true
-    ).
+        iv_do_cache_handshake      = abap_true ).
 
 *   Load metadata document
     DATA(lo_service_factory) = /iwfnd/cl_sodata_svc_factory=>get_svc_factory( ).
@@ -144,9 +142,7 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
     lo_metadata->get_metadata(
       IMPORTING
-        ev_metadata             = DATA(lv_xml)                 " Metadata
-*    ev_data_service_version =                  " Data Service Version
-    ).
+        ev_metadata             = DATA(lv_xml) ).
 
 *   Convert OData V2 to V4 metadata document
     CALL TRANSFORMATION zgw_odatav2_to_v4
@@ -178,14 +174,12 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 *   Convert binary data to string
     DATA(lo_conv) = cl_abap_conv_in_ce=>create(
                       EXPORTING
-                        encoding    = 'UTF-8'                 " Input Character Format
-                        input       = lv_openapi                 " Input Buffer (X, XSTRING)
-                    ).
+                        encoding    = 'UTF-8'
+                        input       = lv_openapi ).
 
     lo_conv->read(
       IMPORTING
-        data = lv_openapi_string
-    ).
+        data = lv_openapi_string ).
 
 *   Add basic authentication to OpenAPI JSON
     "REPLACE ALL OCCURRENCES OF '"components":{' IN lv_openapi_string WITH '"components":{"securitySchemes":{"BasicAuth":{"type":"http","scheme":"basic"}},'.
@@ -274,8 +268,7 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
     lo_context->/iwcor/if_od_cntxt~set_object(
       EXPORTING
         iv_name   = /iwbep/if_od_types=>gc_od_cntx_object_identifier
-        io_object = lo_request_info
-    ).
+        io_object = lo_request_info ).
 
 *   Load metadata document
     DATA lo_service_factory TYPE REF TO /iwbep/cl_od_svc_factory.
@@ -287,9 +280,7 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
     lo_metadata->get_metadata(
       IMPORTING
-        ev_metadata             = DATA(lv_xml)                 " Metadata
-*    ev_data_service_version =                  " Data Service Version
-    ).
+        ev_metadata             = DATA(lv_xml) ).
 
 *   Set transformation parameters
     lv_version = ls_service-service_version.
@@ -316,9 +307,8 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 *   Convert binary data to string
     DATA(lo_conv) = cl_abap_conv_in_ce=>create(
                       EXPORTING
-                        encoding    = 'UTF-8'                 " Input Character Format
-                        input       = lv_openapi                 " Input Buffer (X, XSTRING)
-                    ).
+                        encoding    = 'UTF-8'
+                        input       = lv_openapi ).
 
     lo_conv->read(
       IMPORTING
@@ -375,13 +365,13 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
     ENDIF.
 
 *   Generate URL for BSP application
-    CALL METHOD cl_http_ext_webapp=>create_url_for_bsp_application
+    cl_http_ext_webapp=>create_url_for_bsp_application(
       EXPORTING
         bsp_application      = 'ZGW_OPENAPI'
         bsp_start_page       = lv_page
         bsp_start_parameters = lt_params
       IMPORTING
-        abs_url              = lv_url.
+        abs_url              = lv_url ).
 
 *   Launch BSP application
     lv_url_1 = lv_url.
