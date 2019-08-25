@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_ZGW_OPENAPI_TEST_DPC_EXT</CLSNAME>
+    <CLSNAME>ZCL_GW_OPENAPI_TEST_MPC_EXT</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>Data Provider Secondary Class</DESCRIPT>
+    <DESCRIPT>ZCL_ZGW_OPENAPI_TEST_MPC_EXT</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
