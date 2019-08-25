@@ -88,7 +88,7 @@
     },
     "check_variables": {
       "enabled": true,
-      "exclude": ["/IWBEP/CL_MGW_PUSH_ABS_DATA","/IWBEP/CL_MGW_PUSH_ABS_DATA"]
+      "exclude": ["/IWBEP/CL_MGW_PUSH_ABS_DATA","/IWBEP/CL_MGW_PUSH_ABS_MODEL"]
     },
     "class_attribute_names": {
       "enabled": true,
