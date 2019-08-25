@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <PROGDIR>
-    <NAME>ZGW_SERVICE_OVERVIEW_TOP</NAME>
+    <NAME>ZGW_OPENAPI_CLASS</NAME>
     <SUBC>I</SUBC>
     <RLOAD>E</RLOAD>
     <UCCHECK>X</UCCHECK>
@@ -11,8 +11,8 @@
    <TPOOL>
     <item>
      <ID>R</ID>
-     <ENTRY>Include ZGW_SERVICE_OVERVIEW_TOP</ENTRY>
-     <LENGTH>32</LENGTH>
+     <ENTRY>Include ZGW_SERVICE_OVERVIEW_CLASS</ENTRY>
+     <LENGTH>34</LENGTH>
     </item>
    </TPOOL>
   </asx:values>

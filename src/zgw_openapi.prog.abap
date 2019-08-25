@@ -4,8 +4,8 @@
 *&
 *&---------------------------------------------------------------------*
 
-INCLUDE zgw_service_overview_top. "Global Data
-INCLUDE zgw_service_overview_class. "Screen handler
+INCLUDE zgw_openapi_top.
+INCLUDE zgw_openapi_class.
 
 AT SELECTION-SCREEN OUTPUT.
   lcl_screen_handler=>handle_pbo( ).
