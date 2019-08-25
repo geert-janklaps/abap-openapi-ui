@@ -1,5 +1,5 @@
 {
-  "name": "ABAP OpenAPI UI",
+  "name": "ABAP-OpenAPI-UI",
   "version": "1.0.0",
   "description": "OpenAPI integration for SAP NetWeaver Gateway",
   "scripts": {
