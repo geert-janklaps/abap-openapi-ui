@@ -276,8 +276,8 @@
     "object_naming": {
       "enabled": true,
       "exclude": [],
-      "clas": "^ZC(L|X)\\_GW_OPENAPI\\_",
-      "intf": "^ZIF\\_GW_OPENAPI\\_",
+      "clas": "^ZC(L|X)\\__GW_OPENAPI\\_",
+      "intf": "^ZIF\\__GW_OPENAPI\\_",
       "prog": "^ZGW_OPENAPI",
       "fugr": "^ZGW_OPENAPI",
       "tabl": "^Z",
