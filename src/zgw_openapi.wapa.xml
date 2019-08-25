@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_WAPA" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <ATTRIBUTES>
+    <APPLNAME>ZGW_OPENAPI</APPLNAME>
+    <APPLEXT>ZGW_OPENAPI</APPLEXT>
+    <SECURITY>X</SECURITY>
+    <ORIGLANG>E</ORIGLANG>
+    <MODIFLANG>E</MODIFLANG>
+    <TEXT>SAP NetWeaver Gateway OpenAPI integration</TEXT>
+   </ATTRIBUTES>
+   <PAGES>
+    <item>
+     <ATTRIBUTES>
+      <APPLNAME>ZGW_OPENAPI</APPLNAME>
+      <PAGEKEY>INDEX.HTML</PAGEKEY>
+      <PAGENAME>index.html</PAGENAME>
+      <MIMETYPE>text/html</MIMETYPE>
+      <IS_START_PAGE>X</IS_START_PAGE>
+      <LAYOUTLANGU>E</LAYOUTLANGU>
+      <VERSION>A</VERSION>
+      <LANGU>E</LANGU>
+      <DESCRIPT>Swagger UI Page</DESCRIPT>
+     </ATTRIBUTES>
+     <EVENT_HANDLERS>
+      <O2PAGEVHS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>INDEX.HTML</PAGEKEY>
+       <EVHANDLER>ONINITIALIZATION</EVHANDLER>
+       <VERSION>A</VERSION>
+       <EVHNAME>OnInitialization</EVHNAME>
+       <SOURCE>
+        <item>* event handler for data retrieval</item>
+        <item/>
+        <item>json_url = &apos;openapi.json?service=&apos;</item>
+        <item>         &amp;&amp; service</item>
+        <item>         &amp;&amp; &apos;&amp;version=&apos; &amp;&amp; version</item>
+        <item>         &amp;&amp; &apos;&amp;group=&apos; &amp;&amp; group</item>
+        <item>         &amp;&amp; &apos;&amp;repository=&apos; &amp;&amp; repository.</item>
+       </SOURCE>
+      </O2PAGEVHS>
+     </EVENT_HANDLERS>
+     <PARAMETERS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>INDEX.HTML</PAGEKEY>
+       <COMPNAME>SERVICE</COMPNAME>
+       <VERSION>A</VERSION>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>/IWFND/MED_MDL_SERVICE_GRP_ID</TYPE>
+       <ALIASNAME>service</ALIASNAME>
+       <TEXT>External Service Document Name</TEXT>
+      </O2PAGPARS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>INDEX.HTML</PAGEKEY>
+       <COMPNAME>VERSION</COMPNAME>
+       <VERSION>A</VERSION>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>/IWFND/MED_MDL_VERSION</TYPE>
+       <ALIASNAME>version</ALIASNAME>
+       <TEXT>Version of Meta Model Entity</TEXT>
+      </O2PAGPARS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>INDEX.HTML</PAGEKEY>
+       <COMPNAME>REPOSITORY</COMPNAME>
+       <VERSION>A</VERSION>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>/IWBEP/V4_MED_REPOSITORY_ID</TYPE>
+       <ALIASNAME>repository</ALIASNAME>
+       <TEXT>OData V4 Repository ID</TEXT>
+      </O2PAGPARS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>INDEX.HTML</PAGEKEY>
+       <COMPNAME>GROUP</COMPNAME>
+       <VERSION>A</VERSION>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>/IWBEP/V4_MED_GROUP_ID</TYPE>
+       <ALIASNAME>group</ALIASNAME>
+       <TEXT>OData V4 Group ID</TEXT>
+      </O2PAGPARS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>INDEX.HTML</PAGEKEY>
+       <COMPNAME>JSON_URL</COMPNAME>
+       <VERSION>A</VERSION>
+       <PARDECLTYP>1</PARDECLTYP>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>STRING</TYPE>
+       <ALIASNAME>json_url</ALIASNAME>
+       <TEXT>JSON URL</TEXT>
+      </O2PAGPARS>
+     </PARAMETERS>
+    </item>
+    <item>
+     <ATTRIBUTES>
+      <APPLNAME>ZGW_OPENAPI</APPLNAME>
+      <PAGEKEY>OPENAPI.JSON</PAGEKEY>
+      <PAGENAME>openapi.json</PAGENAME>
+      <MIMETYPE>application/json</MIMETYPE>
+      <IS_START_PAGE>X</IS_START_PAGE>
+      <LAYOUTLANGU>E</LAYOUTLANGU>
+      <VERSION>A</VERSION>
+      <LANGU>E</LANGU>
+      <DESCRIPT>Swagger / OpenAPI JSON</DESCRIPT>
+     </ATTRIBUTES>
+     <EVENT_HANDLERS>
+      <O2PAGEVHS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>OPENAPI.JSON</PAGEKEY>
+       <EVHANDLER>ONINITIALIZATION</EVHANDLER>
+       <VERSION>A</VERSION>
+       <EVHNAME>OnInitialization</EVHNAME>
+       <SOURCE>
+        <item>* event handler for data retrieval</item>
+        <item>DATA: lt_headers  TYPE tihttpnvp,</item>
+        <item>      lv_base_url TYPE string.</item>
+        <item/>
+        <item>* Read request headers</item>
+        <item>request-&gt;if_http_entity~get_header_fields( CHANGING fields = lt_headers ).</item>
+        <item/>
+        <item>* Read HTTP scheme (HTTP / HTTPS)</item>
+        <item>READ TABLE lt_headers INTO DATA(ls_header) WITH KEY name = &apos;~uri_scheme_expanded&apos;.</item>
+        <item>lv_base_url = to_lower( ls_header-value ) &amp;&amp; &apos;://&apos;.</item>
+        <item/>
+        <item>* Read server name</item>
+        <item>READ TABLE lt_headers INTO ls_header WITH KEY name = &apos;~server_name_expanded&apos;.</item>
+        <item>lv_base_url = lv_base_url &amp;&amp; ls_header-value.</item>
+        <item/>
+        <item>* Read server port</item>
+        <item>READ TABLE lt_headers INTO ls_header WITH KEY name = &apos;~server_port_expanded&apos;.</item>
+        <item>IF ls_header-value &lt;&gt; &apos;80&apos; AND ls_header-value &lt;&gt; &apos;443&apos;.</item>
+        <item>  lv_base_url = lv_base_url &amp;&amp; &apos;:&apos; &amp;&amp; ls_header-value.</item>
+        <item>ENDIF.</item>
+        <item/>
+        <item>* Check service parameter is set</item>
+        <item>IF service IS NOT INITIAL.</item>
+        <item>* If no version supplied take default version 1</item>
+        <item>  IF version IS INITIAL.</item>
+        <item>    version = &apos;0001&apos;.</item>
+        <item>  ENDIF.</item>
+        <item/>
+        <item>* Generate JSON</item>
+        <item>  IF group IS INITIAL OR repository IS INITIAL.</item>
+        <item>    zcl_gw_openapi=&gt;generate_openapi_json_v2(</item>
+        <item>      EXPORTING</item>
+        <item>        iv_external_service = service</item>
+        <item>        iv_version          = version</item>
+        <item>        iv_base_url         = lv_base_url</item>
+        <item>      IMPORTING</item>
+        <item>*        ev_metadata         =</item>
+        <item>        ev_metadata_string  = json</item>
+        <item>    ).</item>
+        <item>  ELSE.</item>
+        <item>    zcl_gw_openapi=&gt;generate_openapi_json_v4(</item>
+        <item>      EXPORTING</item>
+        <item>        iv_repository      = repository</item>
+        <item>        iv_group_id        = group</item>
+        <item>        iv_service         = CONV /iwbep/v4_med_service_id( service )</item>
+        <item>        iv_version         = version</item>
+        <item>        iv_base_url        = lv_base_url</item>
+        <item>      IMPORTING</item>
+        <item>*        ev_metadata        =</item>
+        <item>        ev_metadata_string = json</item>
+        <item>    ).</item>
+        <item>  ENDIF.</item>
+        <item/>
+        <item>ENDIF.</item>
+       </SOURCE>
+      </O2PAGEVHS>
+     </EVENT_HANDLERS>
+     <PARAMETERS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>OPENAPI.JSON</PAGEKEY>
+       <COMPNAME>SERVICE</COMPNAME>
+       <VERSION>A</VERSION>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>/IWFND/MED_MDL_SERVICE_GRP_ID</TYPE>
+       <ALIASNAME>service</ALIASNAME>
+       <TEXT>External Service Document Name</TEXT>
+      </O2PAGPARS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>OPENAPI.JSON</PAGEKEY>
+       <COMPNAME>VERSION</COMPNAME>
+       <VERSION>A</VERSION>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>/IWFND/MED_MDL_VERSION</TYPE>
+       <ALIASNAME>version</ALIASNAME>
+       <TEXT>Version of Meta Model Entity</TEXT>
+      </O2PAGPARS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>OPENAPI.JSON</PAGEKEY>
+       <COMPNAME>REPOSITORY</COMPNAME>
+       <VERSION>A</VERSION>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>/IWBEP/V4_MED_REPOSITORY_ID</TYPE>
+       <ALIASNAME>repository</ALIASNAME>
+       <TEXT>OData V4 Repository ID</TEXT>
+      </O2PAGPARS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>OPENAPI.JSON</PAGEKEY>
+       <COMPNAME>GROUP</COMPNAME>
+       <VERSION>A</VERSION>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>/IWBEP/V4_MED_GROUP_ID</TYPE>
+       <ALIASNAME>group</ALIASNAME>
+       <TEXT>OData V4 Group ID</TEXT>
+      </O2PAGPARS>
+      <O2PAGPARS>
+       <APPLNAME>ZGW_OPENAPI</APPLNAME>
+       <PAGEKEY>OPENAPI.JSON</PAGEKEY>
+       <COMPNAME>JSON</COMPNAME>
+       <VERSION>A</VERSION>
+       <PARDECLTYP>1</PARDECLTYP>
+       <TYPTYPE>1</TYPTYPE>
+       <TYPE>STRING</TYPE>
+       <ALIASNAME>json</ALIASNAME>
+       <TEXT>JSON</TEXT>
+      </O2PAGPARS>
+     </PARAMETERS>
+    </item>
+   </PAGES>
+  </asx:values>
+ </asx:abap>
+</abapGit>

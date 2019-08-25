@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_IWMO" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <_-IWBEP_-I_MGW_OHD>
+    <_-IWBEP_-I_MGW_OHD>
+     <TECHNICAL_NAME>ZBC_ODATA_OPENAPI_DEMO_MDL</TECHNICAL_NAME>
+     <VERSION>0001</VERSION>
+     <CLASS_NAME>ZCL_ZBC_ODATA_OPENAPI__MPC_EXT</CLASS_NAME>
+     <CREATED_BY>GJKLAPS</CREATED_BY>
+     <CREATED_TIMESTMP>20190730195214</CREATED_TIMESTMP>
+    </_-IWBEP_-I_MGW_OHD>
+   </_-IWBEP_-I_MGW_OHD>
+   <_-IWBEP_-I_MGW_OHT>
+    <_-IWBEP_-I_MGW_OHT>
+     <TECHNICAL_NAME>ZBC_ODATA_OPENAPI_DEMO_MDL</TECHNICAL_NAME>
+     <VERSION>0001</VERSION>
+     <LANGUAGE>E</LANGUAGE>
+     <DESCRIPTION>oData OpenAPI Framework Demo</DESCRIPTION>
+    </_-IWBEP_-I_MGW_OHT>
+   </_-IWBEP_-I_MGW_OHT>
+  </asx:values>
+ </asx:abap>
+</abapGit>
