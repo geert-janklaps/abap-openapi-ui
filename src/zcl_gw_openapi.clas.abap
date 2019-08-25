@@ -205,7 +205,8 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
 
   METHOD generate_openapi_json_v4.
-    DATA: lt_parameters        TYPE abap_trans_parmbind_tab,
+    DATA: lo_service_factory   TYPE REF TO /iwbep/cl_od_svc_factory,
+          lt_parameters        TYPE abap_trans_parmbind_tab,
           ls_request_base_info TYPE /iwbep/if_v4_request_info=>ty_s_base_info,
           lv_version           TYPE string,
           lv_service           TYPE string,
@@ -268,7 +269,6 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
         io_object = lo_request_info ).
 
 *   Load metadata document
-    DATA lo_service_factory TYPE REF TO /iwbep/cl_od_svc_factory.
     lo_service_factory ?= /iwbep/cl_od_svc_factory=>get_instance( ).
     lo_service_factory->set_lib_context( io_context = lo_context ).
     DATA(lo_service) = lo_service_factory->/iwcor/if_od_svc_factory~create_service( lv_service ).
