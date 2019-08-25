@@ -173,7 +173,6 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
 *   Convert binary data to string
     DATA(lo_conv) = cl_abap_conv_in_ce=>create(
-                      EXPORTING
                         encoding    = 'UTF-8'
                         input       = lv_openapi ).
 
@@ -266,7 +265,6 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
     DATA(lo_context) = NEW /iwcor/cl_od_cntxt( ).
     lo_context->/iwcor/if_od_cntxt~set_object(
-      EXPORTING
         iv_name   = /iwbep/if_od_types=>gc_od_cntx_object_identifier
         io_object = lo_request_info ).
 
@@ -306,7 +304,6 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
 *   Convert binary data to string
     DATA(lo_conv) = cl_abap_conv_in_ce=>create(
-                      EXPORTING
                         encoding    = 'UTF-8'
                         input       = lv_openapi ).
 
