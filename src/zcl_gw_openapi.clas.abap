@@ -1,35 +1,35 @@
-CLASS zcl_gw_openapi DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class ZCL_GW_OPENAPI definition
+  public
+  final
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    CLASS-METHODS generate_openapi_json_v2
-      IMPORTING
-        !iv_external_service TYPE /iwfnd/med_mdl_service_grp_id
-        !iv_version          TYPE /iwfnd/med_mdl_version DEFAULT '0001'
-        !iv_base_url         TYPE string OPTIONAL
-      EXPORTING
-        !ev_metadata         TYPE xstring
-        !ev_metadata_string  TYPE string .
-    CLASS-METHODS generate_openapi_json_v4
-      IMPORTING
-        !iv_repository      TYPE /iwbep/v4_med_repository_id
-        !iv_group_id        TYPE /iwbep/v4_med_group_id
-        !iv_service         TYPE /iwbep/v4_med_service_id
-        !iv_version         TYPE /iwbep/v4_med_service_version DEFAULT '0001'
-        !iv_base_url        TYPE string
-      EXPORTING
-        !ev_metadata        TYPE xstring
-        !ev_metadata_string TYPE string .
-    CLASS-METHODS launch_bsp
-      IMPORTING
-        !iv_external_service TYPE /iwfnd/med_mdl_service_grp_id
-        !iv_version          TYPE /iwfnd/med_mdl_version DEFAULT '0001'
-        !iv_repository       TYPE /iwbep/v4_med_repository_id OPTIONAL
-        !iv_group_id         TYPE /iwbep/v4_med_group_id OPTIONAL
-        !iv_json             TYPE xfeld OPTIONAL .
+  class-methods GENERATE_OPENAPI_JSON_V2
+    importing
+      !IV_EXTERNAL_SERVICE type /IWFND/MED_MDL_SERVICE_GRP_ID
+      !IV_VERSION type /IWFND/MED_MDL_VERSION default '0001'
+      !IV_BASE_URL type STRING optional
+    exporting
+      !EV_METADATA type XSTRING
+      !EV_METADATA_STRING type STRING .
+  class-methods GENERATE_OPENAPI_JSON_V4
+    importing
+      !IV_REPOSITORY type /IWBEP/V4_MED_REPOSITORY_ID
+      !IV_GROUP_ID type /IWBEP/V4_MED_GROUP_ID
+      !IV_SERVICE type /IWBEP/V4_MED_SERVICE_ID
+      !IV_VERSION type /IWBEP/V4_MED_SERVICE_VERSION default '0001'
+      !IV_BASE_URL type STRING
+    exporting
+      !EV_METADATA type XSTRING
+      !EV_METADATA_STRING type STRING .
+  class-methods LAUNCH_BSP
+    importing
+      !IV_EXTERNAL_SERVICE type /IWFND/MED_MDL_SERVICE_GRP_ID
+      !IV_VERSION type /IWFND/MED_MDL_VERSION default '0001'
+      !IV_REPOSITORY type /IWBEP/V4_MED_REPOSITORY_ID optional
+      !IV_GROUP_ID type /IWBEP/V4_MED_GROUP_ID optional
+      !IV_JSON type XFELD optional .
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
