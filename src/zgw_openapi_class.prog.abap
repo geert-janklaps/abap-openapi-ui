@@ -41,25 +41,26 @@ CLASS lcl_screen_handler IMPLEMENTATION.
   METHOD handle_pbo.
 
     LOOP AT SCREEN.
-      IF p_v2 = abap_true.
-        IF screen-name CS 'S_NAME2' OR screen-name CS 'S_VERS2'.
-          screen-invisible = 0.
-          screen-active = 1.
-        ELSEIF screen-name CS 'S_NAME4' OR screen-name CS 'S_VERS4'
-            OR screen-name CS 'S_GRP4' OR screen-name CS 'S_REP4'.
-          screen-invisible = 1.
-          screen-active = 0.
-        ENDIF.
-      ELSE.
-        IF screen-name CS 'S_NAME2' OR screen-name CS 'S_VERS2'.
-          screen-invisible = 1.
-          screen-active = 0.
-        ELSEIF screen-name CS 'S_NAME4' OR screen-name CS 'S_VERS4'
-            OR screen-name CS 'S_GRP4' OR screen-name CS 'S_REP4'.
-          screen-invisible = 0.
-          screen-active = 1.
-        ENDIF.
-      ENDIF.
+      CASE p_v2.
+        WHEN abap_true.
+          IF screen-name CS 'S_NAME2' OR screen-name CS 'S_VERS2'.
+            screen-invisible = 0.
+            screen-active = 1.
+          ELSEIF screen-name CS 'S_NAME4' OR screen-name CS 'S_VERS4'
+              OR screen-name CS 'S_GRP4' OR screen-name CS 'S_REP4'.
+            screen-invisible = 1.
+            screen-active = 0.
+          ENDIF.
+        WHEN OTHERS.
+          IF screen-name CS 'S_NAME2' OR screen-name CS 'S_VERS2'.
+            screen-invisible = 1.
+            screen-active = 0.
+          ELSEIF screen-name CS 'S_NAME4' OR screen-name CS 'S_VERS4'
+              OR screen-name CS 'S_GRP4' OR screen-name CS 'S_REP4'.
+            screen-invisible = 0.
+            screen-active = 1.
+          ENDIF.
+      ENDCASE.
 
       MODIFY SCREEN.
     ENDLOOP.
