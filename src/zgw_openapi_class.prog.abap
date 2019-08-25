@@ -166,27 +166,23 @@ CLASS lcl_screen_handler IMPLEMENTATION.
 
   METHOD handle_link_click.
 
-    IF p_v2 = abap_true.
-      IF column = 'SERVICE_NAME'.
-        READ TABLE gt_v2_data INTO DATA(ls_v2_data) INDEX row.
+    IF p_v2 = abap_true AND column = 'SERVICE_NAME'.
+      READ TABLE gt_v2_data INTO DATA(ls_v2_data) INDEX row.
 
-        zcl_gw_openapi=>launch_bsp(
-            iv_external_service = ls_v2_data-service_name
-            iv_version          = ls_v2_data-service_version
-            iv_json             = p_json ).
-      ENDIF.
+      zcl_gw_openapi=>launch_bsp(
+          iv_external_service = ls_v2_data-service_name
+          iv_version          = ls_v2_data-service_version
+          iv_json             = p_json ).
 
-    ELSE.
-      IF column = 'SERVICE_ID'.
-        READ TABLE gt_v4_data INTO DATA(ls_v4_data) INDEX row.
+    ELSEIF p_v4 = abap_true AND column = 'SERVICE_ID'.
+      READ TABLE gt_v4_data INTO DATA(ls_v4_data) INDEX row.
 
-        zcl_gw_openapi=>launch_bsp(
-            iv_external_service = CONV /iwfnd/med_mdl_service_grp_id( ls_v4_data-service_id )
-            iv_version          = ls_v4_data-service_version
-            iv_repository       = ls_v4_data-repository_id
-            iv_group_id         = ls_v4_data-group_id
-            iv_json             = p_json ).
-      ENDIF.
+      zcl_gw_openapi=>launch_bsp(
+          iv_external_service = CONV /iwfnd/med_mdl_service_grp_id( ls_v4_data-service_id )
+          iv_version          = ls_v4_data-service_version
+          iv_repository       = ls_v4_data-repository_id
+          iv_group_id         = ls_v4_data-group_id
+          iv_json             = p_json ).
     ENDIF.
 
   ENDMETHOD.
