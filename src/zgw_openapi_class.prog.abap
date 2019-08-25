@@ -129,15 +129,13 @@ CLASS lcl_screen_handler IMPLEMENTATION.
         IMPORTING
           r_salv_table   = DATA(lo_alv)
         CHANGING
-          t_table        = gt_v2_data
-      ).
+          t_table        = gt_v2_data ).
     ELSE.
       cl_salv_table=>factory(
         IMPORTING
           r_salv_table   = lo_alv
         CHANGING
-          t_table        = gt_v4_data
-      ).
+          t_table        = gt_v4_data ).
     ENDIF.
 
 *   Enable all standard ALV functions
@@ -150,15 +148,11 @@ CLASS lcl_screen_handler IMPLEMENTATION.
     IF p_v2 = abap_true.
       lo_column ?= lo_columns->get_column( columnname = 'SERVICE_NAME' ).
       lo_column->set_cell_type(
-          value = if_salv_c_cell_type=>hotspot
-      ).
-
+          value = if_salv_c_cell_type=>hotspot ).
     ELSE.
       lo_column ?= lo_columns->get_column( columnname = 'SERVICE_ID' ).
       lo_column->set_cell_type(
-          value = if_salv_c_cell_type=>hotspot
-      ).
-
+          value = if_salv_c_cell_type=>hotspot ).
     ENDIF.
 
 *   Enable events
@@ -180,8 +174,7 @@ CLASS lcl_screen_handler IMPLEMENTATION.
           EXPORTING
             iv_external_service = ls_v2_data-service_name
             iv_version          = ls_v2_data-service_version
-            iv_json             = p_json
-        ).
+            iv_json             = p_json ).
       ENDIF.
 
     ELSE.
@@ -194,8 +187,7 @@ CLASS lcl_screen_handler IMPLEMENTATION.
             iv_version          = ls_v4_data-service_version
             iv_repository       = ls_v4_data-repository_id
             iv_group_id         = ls_v4_data-group_id
-            iv_json             = p_json
-        ).
+            iv_json             = p_json ).
       ENDIF.
     ENDIF.
 
