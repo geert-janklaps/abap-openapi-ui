@@ -129,7 +129,6 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
 *   Initialize metadata access
     lo_transaction_handler->set_metadata_access_info(
-      EXPORTING
         iv_load_last_modified_only = abap_true
         iv_is_busi_data_request    = abap_true
         iv_do_cache_handshake      = abap_true ).
@@ -181,7 +180,8 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
         data = lv_openapi_string ).
 
 *   Add basic authentication to OpenAPI JSON
-    "REPLACE ALL OCCURRENCES OF '"components":{' IN lv_openapi_string WITH '"components":{"securitySchemes":{"BasicAuth":{"type":"http","scheme":"basic"}},'.
+    "REPLACE ALL OCCURRENCES OF '"components":{' IN lv_openapi_string
+    "WITH '"components":{"securitySchemes":{"BasicAuth":{"type":"http","scheme":"basic"}},'.
 
 *   Convert OpenAPI JSON to binary format
     CLEAR lv_openapi.
@@ -205,11 +205,12 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
 
   METHOD generate_openapi_json_v4.
-    DATA: lt_parameters     TYPE abap_trans_parmbind_tab,
-          lv_version        TYPE string,
-          lv_service        TYPE string,
-          lv_path(255)      TYPE c,
-          lv_openapi_string TYPE string.
+    DATA: lt_parameters        TYPE abap_trans_parmbind_tab,
+          ls_request_base_info TYPE /iwbep/if_v4_request_info=>ty_s_base_info,
+          lv_version           TYPE string,
+          lv_service           TYPE string,
+          lv_path(255)         TYPE c,
+          lv_openapi_string    TYPE string.
 
 *   Read service details
     SELECT SINGLE a~repository_id, a~group_id, a~service_id, s~service_version, t~description
@@ -247,8 +248,6 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
     ENDIF.
 
 *   Initialize OData context
-    DATA ls_request_base_info TYPE /iwbep/if_v4_request_info=>ty_s_base_info.
-
     ls_request_base_info-conditions-if_modified_since = 0.
     ls_request_base_info-conditions-if_unmodified_since = 0.
     ls_request_base_info-http_method = 'GET'.
@@ -309,14 +308,13 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
     lo_conv->read(
       IMPORTING
-        data = lv_openapi_string
-    ).
+        data = lv_openapi_string ).
 
     REPLACE ALL OCCURRENCES OF ',,' IN lv_openapi_string WITH ''.
-    "REPLACE ALL OCCURRENCES OF 'com.sap.gateway.default.iwngw.notification_srv.v0001.' IN lv_openapi_string WITH ''.
 
 *   Add basic authentication to OpenAPI JSON
-    "REPLACE ALL OCCURRENCES OF '"components":{' IN lv_openapi_string WITH '"components":{"securitySchemes":{"BasicAuth":{"type":"http","scheme":"basic"}},'.
+    "REPLACE ALL OCCURRENCES OF '"components":{' IN lv_openapi_string
+    "WITH '"components":{"securitySchemes":{"BasicAuth":{"type":"http","scheme":"basic"}},'.
 
 *   Convert OpenAPI JSON to binary format
     CLEAR lv_openapi.
