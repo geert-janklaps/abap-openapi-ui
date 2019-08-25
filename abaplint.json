@@ -320,8 +320,8 @@
       ]
     },
     "remove_descriptions": {
-      "enabled": true,
-      "exclude": ["ZCL_GW_OPENAPI"],
+      "enabled": false,
+      "exclude": [],
       "ignoreExceptions": false
     },
     "sequential_blank": {
