@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "OpenAPI integration for SAP NetWeaver Gateway",
   "scripts": {
-    "test": "abaplint src/*.abap"
+    "test": "abaplint src/*"
   },
   "repository": {
     "type": "git",
