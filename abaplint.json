@@ -62,7 +62,7 @@
     "allowed_object_types": {
       "enabled": true,
       "exclude": [],
-      "allowed": ["PROG", "CLAS", "INTF", "FUGR", "DEVC", "TRAN", "W3MI"]
+      "allowed": []
     },
     "ambiguous_statement": {
       "enabled": true,
