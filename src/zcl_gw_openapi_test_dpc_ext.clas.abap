@@ -1,4 +1,4 @@
-class ZCL_ZGW_OPENAPI_TEST_DPC_EXT definition
+class ZCL_GW_OPENAPI_TEST_DPC_EXT definition
   public
   inheriting from ZCL_ZGW_OPENAPI_TEST_DPC
   create public .
@@ -21,7 +21,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_ZGW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
+CLASS ZCL_GW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
 
 
   method USERCOLLECTION_CREATE_ENTITY.
@@ -32,7 +32,7 @@ CLASS ZCL_ZGW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
   endmethod.
 
 
-  METHOD usercollection_delete_entity.
+  METHOD USERCOLLECTION_DELETE_ENTITY.
     DATA: lt_keys          TYPE /iwbep/t_mgw_tech_pairs,
           ls_key           TYPE /iwbep/s_mgw_tech_pair,
           ls_user_addr     TYPE user_addr,
@@ -74,7 +74,7 @@ CLASS ZCL_ZGW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD usercollection_get_entity.
+  METHOD USERCOLLECTION_GET_ENTITY.
 
 *   Read supplied user name
     READ TABLE it_key_tab INTO DATA(ls_key) WITH KEY name = 'Bname'.
@@ -101,7 +101,7 @@ CLASS ZCL_ZGW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
   endmethod.
 
 
-  METHOD usercollection_update_entity.
+  METHOD USERCOLLECTION_UPDATE_ENTITY.
     DATA: lt_keys          TYPE /iwbep/t_mgw_tech_pairs,
           ls_key           TYPE /iwbep/s_mgw_tech_pair,
           ls_user_addr     TYPE user_addr,
