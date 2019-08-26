@@ -134,14 +134,14 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
         iv_do_cache_handshake      = abap_true ).
 
 *   Load metadata document
-    DATA(lo_service_factory) = /iwfnd/cl_sodata_svc_factory=>get_svc_factory( ).
-    DATA(lo_service) = lo_service_factory->create_service( iv_name = lv_service ).
-    DATA(lo_edm) = lo_service->get_entity_data_model( ).
-    DATA(lo_metadata) = lo_edm->get_service_metadata( ).
+    DATA(li_service_factory) = /iwfnd/cl_sodata_svc_factory=>get_svc_factory( ).
+    DATA(li_service) = li_service_factory->create_service( iv_name = lv_service ).
+    DATA(li_edm) = li_service->get_entity_data_model( ).
+    DATA(li_metadata) = li_edm->get_service_metadata( ).
 
-    lo_metadata->get_metadata(
+    li_metadata->get_metadata(
       IMPORTING
-        ev_metadata             = DATA(lv_xml) ).
+        ev_metadata = DATA(lv_xml) ).
 
 *   Convert OData V2 to V4 metadata document
     CALL TRANSFORMATION zgw_odatav2_to_v4
@@ -259,23 +259,23 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
     ls_request_base_info-service_key-service_version = iv_version.
     ls_request_base_info-uri_request = lv_service.
 
-    DATA(lo_request_info) = /iwbep/cl_v4s_runtime_factory=>create_request_info( ).
-    lo_request_info->init( ls_request_base_info ).
-    lo_request_info->set_lib_request_info( NEW /iwbep/cl_od_request_info( ) ).
+    DATA(li_request_info) = /iwbep/cl_v4s_runtime_factory=>create_request_info( ).
+    li_request_info->init( ls_request_base_info ).
+    li_request_info->set_lib_request_info( NEW /iwbep/cl_od_request_info( ) ).
 
     DATA(lo_context) = NEW /iwcor/cl_od_cntxt( ).
     lo_context->/iwcor/if_od_cntxt~set_object(
         iv_name   = /iwbep/if_od_types=>gc_od_cntx_object_identifier
-        io_object = lo_request_info ).
+        io_object = li_request_info ).
 
 *   Load metadata document
     lo_service_factory ?= /iwbep/cl_od_svc_factory=>get_instance( ).
     lo_service_factory->set_lib_context( io_context = lo_context ).
-    DATA(lo_service) = lo_service_factory->/iwcor/if_od_svc_factory~create_service( lv_service ).
-    DATA(lo_edm) = lo_service->get_entity_data_model( ).
-    DATA(lo_metadata) = lo_edm->get_service_metadata( ).
+    DATA(li_service) = lo_service_factory->/iwcor/if_od_svc_factory~create_service( lv_service ).
+    DATA(li_edm) = li_service->get_entity_data_model( ).
+    DATA(li_metadata) = li_edm->get_service_metadata( ).
 
-    lo_metadata->get_metadata(
+    li_metadata->get_metadata(
       IMPORTING
         ev_metadata             = DATA(lv_xml) ).
 
