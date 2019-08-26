@@ -1,7 +1,7 @@
 [![build status](https://gitlab.com/geertjanklaps/abap-openapi-ui/badges/master/build.svg)](https://gitlab.com/geertjanklaps/abap-openapi-ui/commits/master)
 
 # ABAP OpenAPI UI
-OpenAPI integration for SAP NetWeaver Gateway
+OpenAPI / Swagger UI integration for SAP NetWeaver Gateway
 
 ![abap-open-api-1](docs/abap-openapi-ui-1.png)
 ![abap-open-api-2](docs/abap-openapi-ui-2.png)
