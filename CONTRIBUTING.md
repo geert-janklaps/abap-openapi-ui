@@ -1,4 +1,4 @@
-# Bug reports
+# Bug Reports
 Guidelines for bug reports:
 
 1.  Use the Gitlab issue search — check if the issue has already been reported.
