@@ -22,5 +22,7 @@ ABAP OpenAPI UI is based on 2 open source projects:
 *  [Swagger UI](https://github.com/swagger-api/swagger-ui)
 *  [Odata-OpenAPI](https://github.com/oasis-tcs/odata-openapi)
 
+The ABAP OpenAPI UI Gitlab repository is automatically checked and validated by [abaplint](https://github.com/abaplint/abaplint).
+
 ABAP OpenAPI UI developments were started (and are still being maintained) on a development system provided by:
 [![tvc-logo](https://www.thevaluechain.be/wp-content/uploads/2016/08/The-Value-Chain-Logo-final-1.png)](https://www.thevaluechain.be/)
