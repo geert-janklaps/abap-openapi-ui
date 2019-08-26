@@ -1,3 +1,12 @@
+# Bug reports
+Guidelines for bug reports:
+
+1.  Use the Gitlab issue search — check if the issue has already been reported.
+2.  Check if the issue has been fixed — try to reproduce it using the latest master or development branch in the repository.
+3.  Demonstrate the problem — provide clear steps that can be reproduced.
+
+A good bug report should not leave others needing to chase you up for more information. Please try to be as detailed as possible in your report. What is your environment? What steps will reproduce the issue? What would you expect to be the outcome? All these details will help to fix any potential bugs.
+
 # Development Guidelines
 **Prefixing**
 
