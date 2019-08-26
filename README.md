@@ -7,8 +7,15 @@ OpenAPI integration for SAP NetWeaver Gateway
 ![abap-open-api-2](docs/abap-openapi-ui-2.png)
 ![abap-open-api-3](docs/abap-openapi-ui-3.png)
 
+# Installation
+1.  Install this repository using [abapGit](https://github.com/larshp/abapGit)
+2.  Run transaction ZGW_OPENAPI
+
 # FAQ
 For questions, bugs or feature requests please create an [issue](https://gitlab.com/geertjanklaps/abap-openapi-ui/issues)
+
+# Contributing
+Check the contributing / development guidelines [here](CONTRIBUTING.md)
 
 # Credits
 ABAP OpenAPI UI is based on 2 open source projects:
