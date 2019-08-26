@@ -1,0 +1,16 @@
+{
+  "name": "ABAP-OpenAPI-UI",
+  "version": "1.0.0",
+  "description": "OpenAPI integration for SAP NetWeaver Gateway",
+  "scripts": {
+    "test": "abaplint src/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/geertjanklaps/abap-openapi-ui.git"
+  },  
+  "homepage": "https://gitlab.com/geertjanklaps/abap-openapi-ui",
+  "devDependencies": {
+    "abaplint": "latest"
+  }
+}
