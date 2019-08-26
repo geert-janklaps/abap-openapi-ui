@@ -1,11 +1,11 @@
-class ZCL_GW_OPENAPI_TEST_MPC_EXT definition
-  public
-  inheriting from ZCL_ZGW_OPENAPI_TEST_MPC
-  create public .
+CLASS zcl_gw_openapi_test_mpc_ext DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_zgw_openapi_test_mpc
+  CREATE PUBLIC .
 
-public section.
-protected section.
-private section.
+  PUBLIC SECTION.
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 

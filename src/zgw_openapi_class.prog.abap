@@ -7,15 +7,15 @@ CLASS lcl_screen_handler DEFINITION CREATE PRIVATE.
     CLASS-METHODS handle_pai IMPORTING iv_ok_code TYPE syucomm.
 
     TYPES: BEGIN OF ty_v2_service_s,
-             service_name    TYPE	/iwfnd/med_mdl_service_grp_id,
+             service_name    TYPE /iwfnd/med_mdl_service_grp_id,
              service_version TYPE /iwfnd/med_mdl_version,
              description     TYPE /iwfnd/med_mdl_srg_description,
            END OF ty_v2_service_s.
 
     TYPES: BEGIN OF ty_v4_service_s,
-             group_id        TYPE	/iwbep/v4_med_group_id,
+             group_id        TYPE /iwbep/v4_med_group_id,
              repository_id   TYPE /iwbep/v4_med_repository_id,
-             service_id      TYPE	/iwbep/v4_med_service_id,
+             service_id      TYPE /iwbep/v4_med_service_id,
              service_version TYPE /iwbep/v4_med_service_version,
              description     TYPE /iwbep/v4_reg_description,
            END OF ty_v4_service_s.
@@ -41,25 +41,26 @@ CLASS lcl_screen_handler IMPLEMENTATION.
   METHOD handle_pbo.
 
     LOOP AT SCREEN.
-      IF p_v2 = abap_true.
-        IF screen-name CS 'S_NAME2' OR screen-name CS 'S_VERS2'.
-          screen-invisible = 0.
-          screen-active = 1.
-        ELSEIF screen-name CS 'S_NAME4' OR screen-name CS 'S_VERS4'
-            OR screen-name CS 'S_GRP4' OR screen-name CS 'S_REP4'.
-          screen-invisible = 1.
-          screen-active = 0.
-        ENDIF.
-      ELSE.
-        IF screen-name CS 'S_NAME2' OR screen-name CS 'S_VERS2'.
-          screen-invisible = 1.
-          screen-active = 0.
-        ELSEIF screen-name CS 'S_NAME4' OR screen-name CS 'S_VERS4'
-            OR screen-name CS 'S_GRP4' OR screen-name CS 'S_REP4'.
-          screen-invisible = 0.
-          screen-active = 1.
-        ENDIF.
-      ENDIF.
+      CASE p_v2.
+        WHEN abap_true.
+          IF screen-name CS 'S_NAME2' OR screen-name CS 'S_VERS2'.
+            screen-invisible = 0.
+            screen-active = 1.
+          ELSEIF screen-name CS 'S_NAME4' OR screen-name CS 'S_VERS4'
+              OR screen-name CS 'S_GRP4' OR screen-name CS 'S_REP4'.
+            screen-invisible = 1.
+            screen-active = 0.
+          ENDIF.
+        WHEN OTHERS.
+          IF screen-name CS 'S_NAME2' OR screen-name CS 'S_VERS2'.
+            screen-invisible = 1.
+            screen-active = 0.
+          ELSEIF screen-name CS 'S_NAME4' OR screen-name CS 'S_VERS4'
+              OR screen-name CS 'S_GRP4' OR screen-name CS 'S_REP4'.
+            screen-invisible = 0.
+            screen-active = 1.
+          ENDIF.
+      ENDCASE.
 
       MODIFY SCREEN.
     ENDLOOP.
@@ -129,15 +130,13 @@ CLASS lcl_screen_handler IMPLEMENTATION.
         IMPORTING
           r_salv_table   = DATA(lo_alv)
         CHANGING
-          t_table        = gt_v2_data
-      ).
+          t_table        = gt_v2_data ).
     ELSE.
       cl_salv_table=>factory(
         IMPORTING
           r_salv_table   = lo_alv
         CHANGING
-          t_table        = gt_v4_data
-      ).
+          t_table        = gt_v4_data ).
     ENDIF.
 
 *   Enable all standard ALV functions
@@ -150,15 +149,11 @@ CLASS lcl_screen_handler IMPLEMENTATION.
     IF p_v2 = abap_true.
       lo_column ?= lo_columns->get_column( columnname = 'SERVICE_NAME' ).
       lo_column->set_cell_type(
-          value = if_salv_c_cell_type=>hotspot
-      ).
-
+          value = if_salv_c_cell_type=>hotspot ).
     ELSE.
       lo_column ?= lo_columns->get_column( columnname = 'SERVICE_ID' ).
       lo_column->set_cell_type(
-          value = if_salv_c_cell_type=>hotspot
-      ).
-
+          value = if_salv_c_cell_type=>hotspot ).
     ENDIF.
 
 *   Enable events
@@ -172,31 +167,23 @@ CLASS lcl_screen_handler IMPLEMENTATION.
 
   METHOD handle_link_click.
 
-    IF p_v2 = abap_true.
-      IF column = 'SERVICE_NAME'.
-        READ TABLE gt_v2_data INTO DATA(ls_v2_data) INDEX row.
+    IF p_v2 = abap_true AND column = 'SERVICE_NAME'.
+      READ TABLE gt_v2_data INTO DATA(ls_v2_data) INDEX row.
 
-        zcl_gw_openapi=>launch_bsp(
-          EXPORTING
-            iv_external_service = ls_v2_data-service_name
-            iv_version          = ls_v2_data-service_version
-            iv_json             = p_json
-        ).
-      ENDIF.
+      zcl_gw_openapi=>launch_bsp(
+          iv_external_service = ls_v2_data-service_name
+          iv_version          = ls_v2_data-service_version
+          iv_json             = p_json ).
 
-    ELSE.
-      IF column = 'SERVICE_ID'.
-        READ TABLE gt_v4_data INTO DATA(ls_v4_data) INDEX row.
+    ELSEIF p_v4 = abap_true AND column = 'SERVICE_ID'.
+      READ TABLE gt_v4_data INTO DATA(ls_v4_data) INDEX row.
 
-        zcl_gw_openapi=>launch_bsp(
-          EXPORTING
-            iv_external_service = CONV /iwfnd/med_mdl_service_grp_id( ls_v4_data-service_id )
-            iv_version          = ls_v4_data-service_version
-            iv_repository       = ls_v4_data-repository_id
-            iv_group_id         = ls_v4_data-group_id
-            iv_json             = p_json
-        ).
-      ENDIF.
+      zcl_gw_openapi=>launch_bsp(
+          iv_external_service = CONV /iwfnd/med_mdl_service_grp_id( ls_v4_data-service_id )
+          iv_version          = ls_v4_data-service_version
+          iv_repository       = ls_v4_data-repository_id
+          iv_group_id         = ls_v4_data-group_id
+          iv_json             = p_json ).
     ENDIF.
 
   ENDMETHOD.

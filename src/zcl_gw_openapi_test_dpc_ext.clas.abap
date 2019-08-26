@@ -1,22 +1,22 @@
-class ZCL_GW_OPENAPI_TEST_DPC_EXT definition
-  public
-  inheriting from ZCL_ZGW_OPENAPI_TEST_DPC
-  create public .
+CLASS zcl_gw_openapi_test_dpc_ext DEFINITION
+  PUBLIC
+  INHERITING FROM zcl_zgw_openapi_test_dpc
+  CREATE PUBLIC .
 
-public section.
-protected section.
+  PUBLIC SECTION.
+  PROTECTED SECTION.
 
-  methods USERCOLLECTION_CREATE_ENTITY
-    redefinition .
-  methods USERCOLLECTION_DELETE_ENTITY
-    redefinition .
-  methods USERCOLLECTION_GET_ENTITY
-    redefinition .
-  methods USERCOLLECTION_GET_ENTITYSET
-    redefinition .
-  methods USERCOLLECTION_UPDATE_ENTITY
-    redefinition .
-private section.
+    METHODS usercollection_create_entity
+        REDEFINITION .
+    METHODS usercollection_delete_entity
+        REDEFINITION .
+    METHODS usercollection_get_entity
+        REDEFINITION .
+    METHODS usercollection_get_entityset
+        REDEFINITION .
+    METHODS usercollection_update_entity
+        REDEFINITION .
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -24,15 +24,15 @@ ENDCLASS.
 CLASS ZCL_GW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
 
 
-  method USERCOLLECTION_CREATE_ENTITY.
+  METHOD usercollection_create_entity.
 
 *   Read supplied data and return it as an entity (simulate create)
-    io_data_provider->read_entry_data( importing es_data = er_entity ).
+    io_data_provider->read_entry_data( IMPORTING es_data = er_entity ).
 
-  endmethod.
+  ENDMETHOD.
 
 
-  METHOD USERCOLLECTION_DELETE_ENTITY.
+  METHOD usercollection_delete_entity.
     DATA: lt_keys          TYPE /iwbep/t_mgw_tech_pairs,
           ls_key           TYPE /iwbep/s_mgw_tech_pair,
           ls_user_addr     TYPE user_addr,
@@ -74,7 +74,7 @@ CLASS ZCL_GW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD USERCOLLECTION_GET_ENTITY.
+  METHOD usercollection_get_entity.
 
 *   Read supplied user name
     READ TABLE it_key_tab INTO DATA(ls_key) WITH KEY name = 'Bname'.
@@ -87,8 +87,8 @@ CLASS ZCL_GW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
   ENDMETHOD.
 
 
-  method USERCOLLECTION_GET_ENTITYSET.
-    DATA ls_user_select_option TYPE /IWBEP/S_MGW_SELECT_OPTION.
+  METHOD usercollection_get_entityset.
+    DATA ls_user_select_option TYPE /iwbep/s_mgw_select_option.
 
 *   Read select option (user name)
     READ TABLE it_filter_select_options INTO ls_user_select_option WITH KEY property = 'Bname'.
@@ -98,10 +98,10 @@ CLASS ZCL_GW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
       INTO CORRESPONDING FIELDS OF TABLE et_entityset
       WHERE bname IN ls_user_select_option-select_options.
 
-  endmethod.
+  ENDMETHOD.
 
 
-  METHOD USERCOLLECTION_UPDATE_ENTITY.
+  METHOD usercollection_update_entity.
     DATA: lt_keys          TYPE /iwbep/t_mgw_tech_pairs,
           ls_key           TYPE /iwbep/s_mgw_tech_pair,
           ls_user_addr     TYPE user_addr,

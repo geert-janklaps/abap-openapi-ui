@@ -4,7 +4,7 @@
   <asx:values>
    <TSTC>
     <TCODE>ZGW_OPENAPI</TCODE>
-    <PGMNA>ZGW_SERVICE_OVERVIEW</PGMNA>
+    <PGMNA>ZGW_OPENAPI</PGMNA>
     <DYPNO>1000</DYPNO>
     <CINFO>gA==</CINFO>
    </TSTC>
