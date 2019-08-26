@@ -1,6 +1,6 @@
 {
   "global": {
-    "version": "v750",
+    "version": "v740sp05",
     "skipGeneratedGatewayClasses": true,
     "skipGeneratedPersistentClasses": true,
     "skipGeneratedFunctionGroups": true,
