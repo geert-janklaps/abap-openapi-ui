@@ -14,8 +14,8 @@ Variables are prefixed using the standard setting in [abapOpenChecks Naming Conv
 
 **Downport**
 
-ABAP OpenAPI UI is targeted for version 750, so the code should only contain expressions/statements that works on 750. 
-[abaplint](https://github.com/abaplint/abaplint) will automatically check every PR for language syntax that is not available on 750.
+ABAP OpenAPI UI is targeted for version 740 (sp05), so the code should only contain expressions/statements that works on 740 (sp05). 
+[abaplint](https://github.com/abaplint/abaplint) will automatically check every PR for language syntax that is not available on 740 (sp05).
 
 **Pretty Printer**
 
