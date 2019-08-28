@@ -24,5 +24,5 @@ ABAP OpenAPI UI is based on 2 open source projects:
 
 The ABAP OpenAPI UI code is automatically checked and validated by [abaplint](https://github.com/abaplint/abaplint).
 
-ABAP OpenAPI UI developments were started (and are still being maintained) on a development system provided by:
+This personal project was started (and is still being maintained) on a development system provided by:
 [![tvc-logo](https://www.thevaluechain.be/wp-content/uploads/2016/08/The-Value-Chain-Logo-final-1.png)](https://www.thevaluechain.be/)
