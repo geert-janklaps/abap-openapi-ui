@@ -1,10 +1,19 @@
 CLASS zcl_gw_openapi DEFINITION
   PUBLIC
   FINAL
-  CREATE PUBLIC .
+  CREATE PRIVATE .
 
   PUBLIC SECTION.
 
+    INTERFACES zif_gw_openapi .
+
+    METHODS constructor
+      IMPORTING
+        !iv_repository TYPE /iwbep/v4_med_repository_id OPTIONAL
+        !iv_group_id   TYPE /iwbep/v4_med_group_id OPTIONAL
+        !iv_service    TYPE /iwfnd/med_mdl_service_grp_id
+        !iv_version    TYPE /iwbep/v4_med_service_version DEFAULT '0001'
+        !iv_base_url   TYPE string OPTIONAL .
     CLASS-METHODS generate_openapi_json_v2
       IMPORTING
         !iv_external_service TYPE /iwfnd/med_mdl_service_grp_id
@@ -30,13 +39,63 @@ CLASS zcl_gw_openapi DEFINITION
         !iv_repository       TYPE /iwbep/v4_med_repository_id OPTIONAL
         !iv_group_id         TYPE /iwbep/v4_med_group_id OPTIONAL
         !iv_json             TYPE xfeld OPTIONAL .
+    CLASS-METHODS factory
+      IMPORTING
+        !iv_repository    TYPE /iwbep/v4_med_repository_id OPTIONAL
+        !iv_group_id      TYPE /iwbep/v4_med_group_id OPTIONAL
+        !iv_service       TYPE /iwfnd/med_mdl_service_grp_id
+        !iv_version       TYPE /iwbep/v4_med_service_version DEFAULT '0001'
+        !iv_base_url      TYPE string OPTIONAL
+      RETURNING
+        VALUE(ri_openapi) TYPE REF TO zif_gw_openapi .
   PROTECTED SECTION.
   PRIVATE SECTION.
+
+    DATA mi_metadata_handler TYPE REF TO zif_gw_openapi_metadata .
 ENDCLASS.
 
 
 
 CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
+
+
+  METHOD constructor.
+
+*   Check that at least a service and version is available, else exception
+    IF iv_service IS INITIAL OR iv_version IS INITIAL.
+
+    ENDIF.
+
+*   If repository and group id are initial => OData V2 service
+    IF iv_repository IS INITIAL AND iv_group_id IS INITIAL.
+      me->mi_metadata_handler = zcl_gw_openapi_metadata_v2=>factory(
+                                  iv_external_service = iv_service
+                                  iv_version          = iv_version
+                                  iv_base_url         = iv_base_url ).
+    ELSE.
+*     Repository and group id are not initial => OData V4 service
+      me->mi_metadata_handler = zcl_gw_openapi_metadata_v4=>factory(
+                                  iv_repository = iv_repository
+                                  iv_group_id   = iv_group_id
+                                  iv_service    = CONV /iwbep/v4_med_service_id( iv_service )
+                                  iv_version    = iv_version
+                                  iv_base_url   = iv_base_url ).
+    ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD factory.
+
+*   Return new instance of OpenAPI interface
+    ri_openapi ?= NEW zcl_gw_openapi(
+      iv_repository = iv_repository
+      iv_group_id   = iv_group_id
+      iv_service    = iv_service
+      iv_version    = iv_version
+      iv_base_url   = iv_base_url ).
+
+  ENDMETHOD.
 
 
   METHOD generate_openapi_json_v2.
@@ -383,6 +442,17 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
         no_batch               = 4
         unspecified_error      = 5
         OTHERS                 = 6.
+
+  ENDMETHOD.
+
+
+  METHOD zif_gw_openapi~get_json.
+
+*   Get JSON data
+    me->mi_metadata_handler->get_json(
+      IMPORTING
+        ev_json        = ev_json
+        ev_json_string = ev_json_string ).
 
   ENDMETHOD.
 ENDCLASS.

@@ -144,29 +144,17 @@
         <item>  ENDIF.</item>
         <item/>
         <item>* Generate JSON</item>
-        <item>  IF group IS INITIAL OR repository IS INITIAL.</item>
-        <item>    zcl_gw_openapi=&gt;generate_openapi_json_v2(</item>
-        <item>      EXPORTING</item>
-        <item>        iv_external_service = service</item>
-        <item>        iv_version          = version</item>
-        <item>        iv_base_url         = lv_base_url</item>
-        <item>      IMPORTING</item>
-        <item>*        ev_metadata         =</item>
-        <item>        ev_metadata_string  = json</item>
-        <item>    ).</item>
-        <item>  ELSE.</item>
-        <item>    zcl_gw_openapi=&gt;generate_openapi_json_v4(</item>
-        <item>      EXPORTING</item>
-        <item>        iv_repository      = repository</item>
-        <item>        iv_group_id        = group</item>
-        <item>        iv_service         = CONV /iwbep/v4_med_service_id( service )</item>
-        <item>        iv_version         = version</item>
-        <item>        iv_base_url        = lv_base_url</item>
-        <item>      IMPORTING</item>
-        <item>*        ev_metadata        =</item>
-        <item>        ev_metadata_string = json</item>
-        <item>    ).</item>
-        <item>  ENDIF.</item>
+        <item>  DATA(lo_openapi) = zcl_gw_openapi=&gt;factory(</item>
+        <item>                       iv_repository = repository</item>
+        <item>                       iv_group_id   = group</item>
+        <item>                       iv_service    = service</item>
+        <item>                       iv_version    = version</item>
+        <item>                       iv_base_url   = lv_base_url</item>
+        <item>                     ).</item>
+        <item/>
+        <item>  lo_openapi-&gt;get_json(</item>
+        <item>    IMPORTING</item>
+        <item>      ev_json_string = json ).</item>
         <item/>
         <item>ENDIF.</item>
        </SOURCE>
