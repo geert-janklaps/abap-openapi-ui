@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_SICF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <URL>/sap/opu/odata/sap/TSD30020/</URL>
+   <ICFSERVICE>
+    <ICF_NAME>TSD30020</ICF_NAME>
+    <ORIG_NAME>TSD30020</ORIG_NAME>
+    <ICFALTNME>ZGW_OPENAPI_TEST_SRV</ICFALTNME>
+   </ICFSERVICE>
+   <ICFDOCU>
+    <ICF_NAME>TSD30020</ICF_NAME>
+    <ICF_LANGU>E</ICF_LANGU>
+    <ICF_DOCU>ZGW_OPENAPI_TEST_SRV</ICF_DOCU>
+   </ICFDOCU>
+   <ICFHANDLER_TABLE>
+    <ICFHANDLER>
+     <ICF_NAME>TSD30020</ICF_NAME>
+     <ICFORDER>01</ICFORDER>
+     <ICFTYP>A</ICFTYP>
+     <ICFHANDLER>/IWFND/CL_SODATA_HTTP_HANDLER</ICFHANDLER>
+    </ICFHANDLER>
+   </ICFHANDLER_TABLE>
+  </asx:values>
+ </asx:abap>
+</abapGit>
