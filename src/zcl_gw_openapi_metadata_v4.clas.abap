@@ -74,8 +74,7 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
                           iv_group_id   = iv_group_id
                           iv_service    = iv_service
                           iv_version    = iv_version
-                          iv_base_url   = iv_base_url
-                        ).
+                          iv_base_url   = iv_base_url ).
 
   ENDMETHOD.
 

@@ -1,9 +1,9 @@
-interface ZIF_GW_OPENAPI
-  public .
+INTERFACE zif_gw_openapi
+  PUBLIC .
 
 
-  methods GET_JSON
-    exporting
-      !EV_JSON type XSTRING
-      !EV_JSON_STRING type STRING .
-endinterface.
+  METHODS get_json
+    EXPORTING
+      !ev_json        TYPE xstring
+      !ev_json_string TYPE string.
+ENDINTERFACE.
