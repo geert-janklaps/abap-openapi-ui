@@ -17,6 +17,8 @@ For questions, bugs or feature requests please create an [issue](https://gitlab.
 # Contributing
 Check the contributing / development guidelines [here](CONTRIBUTING.md)
 
+Discussions and suggestions can be added to the [Slack Group](https://abap-openapi-ui.slack.com)
+
 # Credits
 ABAP OpenAPI UI is based on 2 open source projects:
 *  [Swagger UI](https://github.com/swagger-api/swagger-ui)
