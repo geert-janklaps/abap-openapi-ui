@@ -105,21 +105,16 @@ CLASS lcl_screen_handler IMPLEMENTATION.
            h~changed_timestmp AS changed_at,
            t~description,
            p~devclass
-
       FROM /iwfnd/i_med_srh AS h
-
       LEFT OUTER JOIN /iwfnd/i_med_srt AS t ON  h~srv_identifier = t~srv_identifier
                                             AND h~is_active      = t~is_active
                                             AND t~language       = @sy-langu
-
       INNER JOIN tadir AS p ON p~obj_name = h~srv_identifier
-
       WHERE h~service_name IN @s_name2
         AND h~service_version IN @s_vers2
         AND h~is_active = 'A'
         AND p~pgmid     = 'R3TR'
         AND p~object    = 'IWSG'
-
       INTO CORRESPONDING FIELDS OF TABLE @gt_v2_data.
 
     LOOP AT gt_v2_data ASSIGNING FIELD-SYMBOL(<data>).
