@@ -56,7 +56,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
+CLASS zcl_gw_openapi IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -397,18 +397,57 @@ CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
 
   METHOD launch_bsp.
-    DATA: lv_url    TYPE string,
-          lv_url_1  TYPE agr_url2,
-          lv_appl   TYPE string,
-          lv_page   TYPE string,
-          lt_params TYPE tihttpnvp.
+    DATA: lv_url                  TYPE string,
+          lv_url_1                TYPE agr_url2,
+          lv_appl                 TYPE string,
+          lv_page                 TYPE string,
+          lt_params               TYPE tihttpnvp,
+          lv_answer               TYPE string,
+          lv_valueout             TYPE string,
+          lv_is_syst_client_valid TYPE abap_bool VALUE abap_false.
+
+    WHILE lv_is_syst_client_valid = abap_false.
+
+      CLEAR: lv_answer, lv_valueout.
+
+      CALL FUNCTION 'POPUP_TO_GET_VALUE'
+        EXPORTING
+          fieldname           = 'MANDT'
+          tabname             = 'T000'
+          titel               = 'Enter System Client'
+          valuein             = 'XXX'
+        IMPORTING
+          answer              = lv_answer
+          valueout            = lv_valueout
+        EXCEPTIONS
+          fieldname_not_found = 1
+          OTHERS              = 2.
+
+      IF sy-subrc <> 0.
+        MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+      ENDIF.
+
+      IF lv_answer = 'C'.
+        RETURN.
+      ENDIF.
+
+      SELECT SINGLE @abap_true
+      FROM t000
+      WHERE mandt = @lv_valueout
+      INTO @lv_is_syst_client_valid.
+
+      IF lv_is_syst_client_valid = abap_false.
+        MESSAGE `Client does not exist. Let's try again?!` TYPE 'I' DISPLAY LIKE 'I'.
+      ENDIF.
+
+    ENDWHILE.
 
 *   Set parameters for BSP application
     lt_params = VALUE #( ( name = 'service' value = iv_external_service )
                          ( name = 'version' value = iv_version )
                          ( name = 'repository' value = iv_repository )
                          ( name = 'group' value = iv_group_id )
-                         ( name = 'sap-client' value = sy-mandt )
+                         ( name = 'sap-client' value = lv_valueout )
                          ( name = 'sap-language' value = sy-langu ) ).
 
 *   Set page
