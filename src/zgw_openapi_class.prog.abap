@@ -117,9 +117,12 @@ CLASS lcl_screen_handler IMPLEMENTATION.
         AND p~object    = 'IWSG'
       INTO CORRESPONDING FIELDS OF TABLE @gt_v2_data.
 
-    LOOP AT gt_v2_data ASSIGNING FIELD-SYMBOL(<data>).
-      CONVERT TIME STAMP <data>-created_at TIME ZONE sy-zonlo INTO DATE <data>-created_date TIME <data>-created_time.
-      CONVERT TIME STAMP <data>-changed_at TIME ZONE sy-zonlo INTO DATE <data>-changed_date TIME <data>-changed_time.
+    LOOP AT gt_v2_data ASSIGNING FIELD-SYMBOL(<ls_data>).
+      CONVERT TIME STAMP <ls_data>-created_at TIME ZONE sy-zonlo
+        INTO DATE <ls_data>-created_date TIME <ls_data>-created_time.
+
+      CONVERT TIME STAMP <ls_data>-changed_at TIME ZONE sy-zonlo
+        INTO DATE <ls_data>-changed_date TIME <ls_data>-changed_time.
     ENDLOOP.
 
   ENDMETHOD.

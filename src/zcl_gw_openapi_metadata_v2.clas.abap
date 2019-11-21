@@ -204,14 +204,18 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
 *   Initialize NetWeaver Gateway transaction handler
     DATA(lo_transaction_handler) = /iwfnd/cl_transaction_handler=>get_transaction_handler( ).
 
-    lo_transaction_handler->set_service_name( iv_name = ls_service-service_name ).
-    lo_transaction_handler->set_service_version( iv_version = ls_service-service_version ).
-    lo_transaction_handler->set_service_namespace( iv_namespace = ls_service-namespace ).
+*   Initialize transaction handler (set metadata access with full documentation)
+    lo_transaction_handler->initialize(
+        iv_request_id            = ''                 " SCL Framework: Consumer Request ID
+        iv_external_srv_grp_name = ls_service-service_name                 " External Service Group Name
+        iv_version               = ls_service-service_version                 " version of meta model entity
+        iv_namespace             = ls_service-namespace                 " Namespace
+        iv_verbose_metadata      = /iwfnd/if_mgw_core_types=>gcs_verbose_metadata-all ).
 
 *   Initialize metadata access
     lo_transaction_handler->set_metadata_access_info(
-        iv_load_last_modified_only = abap_true
-        iv_is_busi_data_request    = abap_true
+        iv_load_last_modified_only = abap_false
+        iv_is_busi_data_request    = abap_false
         iv_do_cache_handshake      = abap_true ).
 
 *   Load metadata document
