@@ -187,7 +187,7 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     ls_request_base_info-service_key-repository_id = me->mv_repository.
     ls_request_base_info-service_key-service_id = me->mv_external_service.
     ls_request_base_info-service_key-service_version = me->mv_version.
-    ls_request_base_info-uri_request = lv_service.
+    ls_request_base_info-uri_request = lv_service && '$metadata?sap-documentation=all'.
 
     DATA(li_request_info) = /iwbep/cl_v4s_runtime_factory=>create_request_info( ).
     li_request_info->init( ls_request_base_info ).
