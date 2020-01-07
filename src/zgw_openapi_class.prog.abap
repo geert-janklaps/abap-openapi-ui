@@ -106,7 +106,7 @@ CLASS lcl_screen_handler IMPLEMENTATION.
            t~description,
            p~devclass
       FROM /iwfnd/i_med_srh AS h
-      LEFT OUTER JOIN /iwfnd/i_med_srt AS t ON  h~srv_identifier = t~srv_identifier
+      LEFT OUTER JOIN /iwfnd/i_med_srt AS t ON h~srv_identifier = t~srv_identifier
                                             AND h~is_active      = t~is_active
                                             AND t~language       = @sy-langu
       INNER JOIN tadir AS p ON p~obj_name = h~srv_identifier

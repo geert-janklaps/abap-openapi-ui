@@ -22,7 +22,7 @@ stages:
 
 abaplint:
   stage: test
+  before_script:
+    - npm install -g abaplint
   script:
-   - npm install
-   - npm install abaplint@1.8.0
-   - npm test
+   - abaplint
