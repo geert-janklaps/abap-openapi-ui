@@ -56,15 +56,10 @@ ENDCLASS.
 
 
 
-CLASS zcl_gw_openapi IMPLEMENTATION.
+CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
 
 
   METHOD constructor.
-
-*   Check that at least a service and version is available, else exception
-    IF iv_service IS INITIAL OR iv_version IS INITIAL.
-
-    ENDIF.
 
 *   If repository and group id are initial => OData V2 service
     IF iv_repository IS INITIAL AND iv_group_id IS INITIAL.
@@ -106,9 +101,9 @@ CLASS zcl_gw_openapi IMPLEMENTATION.
           lv_openapi_string TYPE string.
 
 *   Read service details
-    SELECT SINGLE h~srv_identifier, h~namespace, h~service_name, h~service_version,  t~description
+    SELECT SINGLE h~srv_identifier, h~namespace, h~service_name, h~service_version, t~description
       FROM /iwfnd/i_med_srh AS h
-      LEFT OUTER JOIN /iwfnd/i_med_srt AS t ON  h~srv_identifier = t~srv_identifier
+      LEFT OUTER JOIN /iwfnd/i_med_srt AS t ON h~srv_identifier = t~srv_identifier
                                             AND h~is_active      = t~is_active
                                             AND t~language       = @sy-langu
       INTO @DATA(ls_service)
@@ -198,9 +193,7 @@ CLASS zcl_gw_openapi IMPLEMENTATION.
     DATA(li_edm) = li_service->get_entity_data_model( ).
     DATA(li_metadata) = li_edm->get_service_metadata( ).
 
-    li_metadata->get_metadata(
-      IMPORTING
-        ev_metadata = DATA(lv_xml) ).
+    li_metadata->get_metadata( IMPORTING ev_metadata = DATA(lv_xml) ).
 
 *   Convert OData V2 to V4 metadata document
     CALL TRANSFORMATION zgw_odatav2_to_v4
@@ -234,9 +227,7 @@ CLASS zcl_gw_openapi IMPLEMENTATION.
                         encoding    = 'UTF-8'
                         input       = lv_openapi ).
 
-    lo_conv->read(
-      IMPORTING
-        data = lv_openapi_string ).
+    lo_conv->read( IMPORTING data = lv_openapi_string ).
 
 *   Add basic authentication to OpenAPI JSON
     "REPLACE ALL OCCURRENCES OF '"components":{' IN lv_openapi_string
@@ -252,9 +243,6 @@ CLASS zcl_gw_openapi IMPLEMENTATION.
       EXCEPTIONS
         failed = 1
         OTHERS = 2.
-    IF sy-subrc <> 0.
-* Implement suitable error handling here
-    ENDIF.
 
 *   Set exporting parameters
     ev_metadata = lv_openapi.
@@ -334,9 +322,7 @@ CLASS zcl_gw_openapi IMPLEMENTATION.
     DATA(li_edm) = li_service->get_entity_data_model( ).
     DATA(li_metadata) = li_edm->get_service_metadata( ).
 
-    li_metadata->get_metadata(
-      IMPORTING
-        ev_metadata             = DATA(lv_xml) ).
+    li_metadata->get_metadata( IMPORTING ev_metadata = DATA(lv_xml) ).
 
 *   Set transformation parameters
     lv_version = ls_service-service_version.
@@ -365,9 +351,7 @@ CLASS zcl_gw_openapi IMPLEMENTATION.
                         encoding    = 'UTF-8'
                         input       = lv_openapi ).
 
-    lo_conv->read(
-      IMPORTING
-        data = lv_openapi_string ).
+    lo_conv->read( IMPORTING data = lv_openapi_string ).
 
     REPLACE ALL OCCURRENCES OF ',,' IN lv_openapi_string WITH ''.
 
@@ -385,9 +369,6 @@ CLASS zcl_gw_openapi IMPLEMENTATION.
       EXCEPTIONS
         failed = 1
         OTHERS = 2.
-    IF sy-subrc <> 0.
-* Implement suitable error handling here
-    ENDIF.
 
 *   Set exporting parameters
     ev_metadata = lv_openapi.
@@ -432,9 +413,9 @@ CLASS zcl_gw_openapi IMPLEMENTATION.
       ENDIF.
 
       SELECT SINGLE @abap_true
-      FROM t000
-      WHERE mandt = @lv_valueout
-      INTO @lv_is_syst_client_valid.
+        FROM t000
+        INTO @lv_is_syst_client_valid
+        WHERE mandt = @lv_valueout.
 
       IF lv_is_syst_client_valid = abap_false.
         MESSAGE `Client does not exist. Let's try again?!` TYPE 'I' DISPLAY LIKE 'I'.

@@ -1,4 +1,4 @@
-CLASS zcl_gw_openapi_test_dpc_ext DEFINITION
+CLASS zcl_zgw_openapi_test_dpc_ext DEFINITION
   PUBLIC
   INHERITING FROM zcl_zgw_openapi_test_dpc
   CREATE PUBLIC .
@@ -21,7 +21,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_GW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
+CLASS ZCL_ZGW_OPENAPI_TEST_DPC_EXT IMPLEMENTATION.
 
 
   METHOD usercollection_create_entity.

@@ -52,10 +52,6 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
       AND a~repository_id = @me->mv_repository
       AND s~service_version = @me->mv_version.
 
-    IF sy-subrc <> 0.
-      "Raise exception
-    ENDIF.
-
 *   Store service parameters
     me->mv_repository = iv_repository.
     me->mv_group_id = iv_group_id.
@@ -90,11 +86,9 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
                         encoding    = 'UTF-8'
                         input       = lv_openapi ).
 
-    lo_conv->read(
-      IMPORTING
-        data = lv_openapi_string ).
+    lo_conv->read( IMPORTING data = lv_openapi_string ).
 
-    REPLACE ALL OCCURRENCES OF ',,' IN lv_openapi_string WITH ''.
+    "REPLACE ALL OCCURRENCES OF ',,' IN lv_openapi_string WITH ''.
 
 *   Add basic authentication to OpenAPI JSON
     "REPLACE ALL OCCURRENCES OF '"components":{' IN lv_openapi_string
@@ -110,9 +104,6 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
       EXCEPTIONS
         failed = 1
         OTHERS = 2.
-    IF sy-subrc <> 0.
-* Implement suitable error handling here
-    ENDIF.
 
 *   Set exporting parameters
     ev_json = lv_openapi.
@@ -131,9 +122,12 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
 
   METHOD _read_metadata.
     DATA: lo_service_factory   TYPE REF TO /iwbep/cl_od_svc_factory,
+          li_service_factory   TYPE REF TO /iwcor/if_od_svc_factory,
           ls_request_base_info TYPE /iwbep/if_v4_request_info=>ty_s_base_info,
           lv_service           TYPE string,
           lv_path(255)         TYPE c.
+
+    FIELD-SYMBOLS: <lv_base_url> TYPE string.
 
 *   Read service details
     SELECT SINGLE a~repository_id, a~group_id, a~service_id, s~service_version, t~description
@@ -152,9 +146,19 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
 *   Store description
     me->mv_description = ls_service-description.
 
-*   Set service url
-    lv_service = /iwbep/cl_v4_url_util=>gc_root_url
-               && ls_service-group_id && '/'
+*   Set service base url (gc_uri_icf_path = 7.54, gc_root_url = 7.53 and lower)
+    ASSIGN /iwbep/cl_v4_url_util=>('gc_uri_icf_path') TO <lv_base_url>.
+    IF sy-subrc <> 0.
+      ASSIGN /iwbep/cl_v4_url_util=>('gc_root_url') TO <lv_base_url>.
+    ENDIF.
+
+    IF <lv_base_url> IS ASSIGNED.
+      lv_service = <lv_base_url>.
+    ELSE.
+      lv_service = '/sap/opu/odata4'.
+    ENDIF.
+
+    lv_service = lv_service && ls_service-group_id && '/'
                && ls_service-repository_id && '/'
                && ls_service-service_id && '/'
                && ls_service-service_version.
@@ -189,9 +193,31 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     ls_request_base_info-service_key-service_version = me->mv_version.
     ls_request_base_info-uri_request = lv_service && '$metadata?sap-documentation=all'.
 
+    ls_request_base_info-http_headers = VALUE #( ( name = '~request_method' value = ls_request_base_info-http_method )
+                                                 ( name = '~request_uri' value = ls_request_base_info-uri_request )
+                                                 ( name = 'host' value = ls_request_base_info-host_name )
+                                                 ( name = 'sap-client' value = sy-mandt )
+                                                 ( name = 'sap-language' value = sy-langu ) ).
+
     DATA(li_request_info) = /iwbep/cl_v4s_runtime_factory=>create_request_info( ).
-    li_request_info->init( ls_request_base_info ).
+    TRY.
+        "li_request_info->init( ls_request_base_info ).
+*       Netweaver 7.54+
+        CALL METHOD li_request_info->('SET_BASE_INFO')
+          EXPORTING
+            is_base_info = ls_request_base_info.
+      CATCH cx_sy_dyn_call_illegal_method.
+        "li_request_info->init( ls_request_base_info ).
+
+*       Netweaver 7.53 and lower
+        CALL METHOD li_request_info->('INIT')
+          EXPORTING
+            is_base_info = ls_request_base_info.
+    ENDTRY.
+
     li_request_info->set_lib_request_info( NEW /iwbep/cl_od_request_info( ) ).
+    li_request_info->set_operation_kind(
+      iv_operation_kind = /iwbep/if_v4_request_info=>gcs_operation_kinds-load_metadata ).
 
     DATA(lo_context) = NEW /iwcor/cl_od_cntxt( ).
     lo_context->/iwcor/if_od_cntxt~set_object(
@@ -199,15 +225,25 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
         io_object = li_request_info ).
 
 *   Load metadata document
-    lo_service_factory ?= /iwbep/cl_od_svc_factory=>get_instance( ).
+    TRY.
+        "lo_service_factory ?= /iwbep/cl_od_svc_factory=>get_instance( ).
+*       Netweaver 7.53 and lower
+        CALL METHOD /iwbep/cl_od_svc_factory=>('GET_INSTANCE')
+          RECEIVING
+            ro_svc_factory = li_service_factory.
+
+        lo_service_factory ?= li_service_factory.
+      CATCH cx_sy_dyn_call_illegal_method.
+*       Netweaver 7.54+
+        CREATE OBJECT li_service_factory TYPE ('/IWBEP/CL_OD_SVC_FACTORY').
+        lo_service_factory ?= li_service_factory.
+    ENDTRY.
+
     lo_service_factory->set_lib_context( io_context = lo_context ).
     DATA(li_service) = lo_service_factory->/iwcor/if_od_svc_factory~create_service( lv_service ).
     DATA(li_edm) = li_service->get_entity_data_model( ).
     DATA(li_metadata) = li_edm->get_service_metadata( ).
 
-    li_metadata->get_metadata(
-      IMPORTING
-        ev_metadata             = rv_metadata ).
-
+    li_metadata->get_metadata( IMPORTING ev_metadata = rv_metadata ).
   ENDMETHOD.
 ENDCLASS.

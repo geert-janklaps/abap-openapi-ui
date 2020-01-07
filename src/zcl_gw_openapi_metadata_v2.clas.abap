@@ -44,10 +44,6 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
       WHERE service_name = @iv_external_service
       AND service_version = @iv_version.
 
-    IF sy-subrc <> 0.
-      "Raise exception
-    ENDIF.
-
 *   Store service parameters
     me->mv_external_service = iv_external_service.
     me->mv_version = iv_version.
@@ -78,9 +74,7 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
                         encoding    = 'UTF-8'
                         input       = lv_openapi ).
 
-    lo_conv->read(
-      IMPORTING
-        data = lv_openapi_string ).
+    lo_conv->read( IMPORTING data = lv_openapi_string ).
 
 *   Add basic authentication to OpenAPI JSON
     "REPLACE ALL OCCURRENCES OF '"components":{' IN lv_openapi_string
@@ -96,9 +90,6 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
       EXCEPTIONS
         failed = 1
         OTHERS = 2.
-    IF sy-subrc <> 0.
-* Implement suitable error handling here
-    ENDIF.
 
 *   Set exporting parameters
     ev_json = lv_openapi.
@@ -120,9 +111,9 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
           lv_path(255) TYPE c.
 
 *   Read service details
-    SELECT SINGLE h~srv_identifier, h~namespace, h~service_name, h~service_version,  t~description
+    SELECT SINGLE h~srv_identifier, h~namespace, h~service_name, h~service_version, t~description
       FROM /iwfnd/i_med_srh AS h
-      LEFT OUTER JOIN /iwfnd/i_med_srt AS t ON  h~srv_identifier = t~srv_identifier
+      LEFT OUTER JOIN /iwfnd/i_med_srt AS t ON h~srv_identifier = t~srv_identifier
                                             AND h~is_active      = t~is_active
                                             AND t~language       = @sy-langu
       INTO @DATA(ls_service)
@@ -206,10 +197,10 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
 
 *   Initialize transaction handler (set metadata access with full documentation)
     lo_transaction_handler->initialize(
-        iv_request_id            = ''                 " SCL Framework: Consumer Request ID
-        iv_external_srv_grp_name = ls_service-service_name                 " External Service Group Name
-        iv_version               = ls_service-service_version                 " version of meta model entity
-        iv_namespace             = ls_service-namespace                 " Namespace
+        iv_request_id            = ''
+        iv_external_srv_grp_name = ls_service-service_name
+        iv_version               = ls_service-service_version
+        iv_namespace             = ls_service-namespace
         iv_verbose_metadata      = /iwfnd/if_mgw_core_types=>gcs_verbose_metadata-all ).
 
 *   Initialize metadata access
@@ -224,9 +215,7 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
     DATA(li_edm) = li_service->get_entity_data_model( ).
     DATA(li_metadata) = li_edm->get_service_metadata( ).
 
-    li_metadata->get_metadata(
-      IMPORTING
-        ev_metadata = rv_metadata ).
+    li_metadata->get_metadata( IMPORTING ev_metadata = rv_metadata ).
 
   ENDMETHOD.
 ENDCLASS.

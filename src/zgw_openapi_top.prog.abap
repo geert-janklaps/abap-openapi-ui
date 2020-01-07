@@ -1,7 +1,7 @@
 *&---------------------------------------------------------------------*
 *& Include ZGW_SERVICE_OVERVIEW_TOP                 - Report ZGW_SERVICE_OVERVIEW
 *&---------------------------------------------------------------------*
-REPORT zgw_service_overview.
+
 
 TABLES: /iwfnd/i_med_srh,
         /iwbep/i_v4_msrv,
