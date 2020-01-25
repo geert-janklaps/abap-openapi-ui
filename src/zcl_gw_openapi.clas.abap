@@ -1,35 +1,35 @@
-class ZCL_GW_OPENAPI definition
-  public
-  final
-  create private .
+CLASS zcl_gw_openapi DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PRIVATE .
 
-public section.
+  PUBLIC SECTION.
 
-  interfaces ZIF_GW_OPENAPI .
+    INTERFACES zif_gw_openapi .
 
-  methods CONSTRUCTOR
-    importing
-      !IV_REPOSITORY type /IWBEP/V4_MED_REPOSITORY_ID optional
-      !IV_GROUP_ID type /IWBEP/V4_MED_GROUP_ID optional
-      !IV_SERVICE type /IWFND/MED_MDL_SERVICE_GRP_ID
-      !IV_VERSION type /IWBEP/V4_MED_SERVICE_VERSION default '0001'
-      !IV_BASE_URL type STRING optional .
-  class-methods LAUNCH_BSP
-    importing
-      !IV_EXTERNAL_SERVICE type /IWFND/MED_MDL_SERVICE_GRP_ID
-      !IV_VERSION type /IWFND/MED_MDL_VERSION default '0001'
-      !IV_REPOSITORY type /IWBEP/V4_MED_REPOSITORY_ID optional
-      !IV_GROUP_ID type /IWBEP/V4_MED_GROUP_ID optional
-      !IV_JSON type XFELD optional .
-  class-methods FACTORY
-    importing
-      !IV_REPOSITORY type /IWBEP/V4_MED_REPOSITORY_ID optional
-      !IV_GROUP_ID type /IWBEP/V4_MED_GROUP_ID optional
-      !IV_SERVICE type /IWFND/MED_MDL_SERVICE_GRP_ID
-      !IV_VERSION type /IWBEP/V4_MED_SERVICE_VERSION default '0001'
-      !IV_BASE_URL type STRING optional
-    returning
-      value(RI_OPENAPI) type ref to ZIF_GW_OPENAPI .
+    METHODS constructor
+      IMPORTING
+        !iv_repository TYPE /iwbep/v4_med_repository_id OPTIONAL
+        !iv_group_id TYPE /iwbep/v4_med_group_id OPTIONAL
+        !iv_service TYPE /iwfnd/med_mdl_service_grp_id
+        !iv_version TYPE /iwbep/v4_med_service_version DEFAULT '0001'
+        !iv_base_url TYPE string OPTIONAL .
+    CLASS-METHODS launch_bsp
+      IMPORTING
+        !iv_external_service TYPE /iwfnd/med_mdl_service_grp_id
+        !iv_version TYPE /iwfnd/med_mdl_version DEFAULT '0001'
+        !iv_repository TYPE /iwbep/v4_med_repository_id OPTIONAL
+        !iv_group_id TYPE /iwbep/v4_med_group_id OPTIONAL
+        !iv_json TYPE xfeld OPTIONAL .
+    CLASS-METHODS factory
+      IMPORTING
+        !iv_repository TYPE /iwbep/v4_med_repository_id OPTIONAL
+        !iv_group_id TYPE /iwbep/v4_med_group_id OPTIONAL
+        !iv_service TYPE /iwfnd/med_mdl_service_grp_id
+        !iv_version TYPE /iwbep/v4_med_service_version DEFAULT '0001'
+        !iv_base_url TYPE string OPTIONAL
+      RETURNING
+        VALUE(ri_openapi) TYPE REF TO zif_gw_openapi .
   PROTECTED SECTION.
   PRIVATE SECTION.
 
@@ -38,7 +38,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_GW_OPENAPI IMPLEMENTATION.
+CLASS zcl_gw_openapi IMPLEMENTATION.
 
 
   METHOD constructor.
