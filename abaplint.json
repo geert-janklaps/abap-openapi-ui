@@ -3,8 +3,7 @@
     "files": "/src/**/*.*",
     "skipGeneratedGatewayClasses": true,
     "skipGeneratedPersistentClasses": true,
-    "skipGeneratedFunctionGroups": true,
-    "applyUnspecifiedRules": false
+    "skipGeneratedFunctionGroups": true
   },
   "dependencies": [
     {
@@ -21,36 +20,23 @@
   },
   "rules": {
     "7bit_ascii": {
-      "enabled": true,
-      "exclude": [],
-      "reason": ""
-    },
-    "abapdoc": {
-      "enabled": false,
-      "exclude": [],
-      "reason": "",
-      "checkLocal": false
-    },
-    "allowed_object_naming": {
-      "enabled": false,
       "exclude": [],
       "reason": ""
     },
     "allowed_object_types": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "allowed": []
     },
     "ambiguous_statement": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "avoid_use": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
+      "break": true,
+      "defaultKey": true,
       "define": true,
       "endselect": true,
       "execSQL": true,
@@ -60,63 +46,47 @@
       "systemCall": true
     },
     "begin_end_names": {
-      "enabled": true,
-      "exclude": [],
-      "reason": ""
-    },
-    "breakpoint": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "chain_mainly_declarations": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "check_abstract": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "check_comments": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "allowEndOfLine": false
     },
     "check_ddic": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "check_include": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "check_no_handler_pragma": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "check_syntax": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "check_text_elements": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "check_transformation_exists": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "class_attribute_names": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "patternKind": "required",
@@ -127,42 +97,35 @@
       "instance": "^M._.+$"
     },
     "cloud_types": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "colon_missing_space": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "commented_code": {
-      "enabled": true,
-      "exclude": [],
-      "reason": ""
+      "allowIncludeInFugr": false,
+      "exclude": ["src/zcl_gw_openapi_metadata_v2.clas.abap","src/zcl_gw_openapi_metadata_v4.clas.abap"],
+      "reason": "ToDo"
     },
     "constructor_visibility_public": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "contains_tab": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "definitions_top": {
-      "enabled": true,
-      "exclude": [],
-      "reason": ""
+      "exclude": ["src/zcl_gw_openapi_metadata_v4.clas.abap"],
+      "reason": "ToDo"
     },
     "description_empty": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "double_space": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "keywords": true,
@@ -171,18 +134,15 @@
       "afterColon": true
     },
     "empty_line_in_statement": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "allowChained": false
     },
     "empty_statement": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "empty_structure": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "loop": true,
@@ -194,65 +154,53 @@
       "at": true
     },
     "exit_or_check": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "exporting": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "form_no_dash": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "form_tables_obsolete": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "fully_type_constants": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "checkData": true
     },
     "functional_writing": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "ignoreExceptions": true
     },
     "global_class": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "identical_form_names": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "if_in_if": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "implement_methods": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "in_statement_indentation": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "ignoreExceptions": true
     },
     "indentation": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "ignoreExceptions": true,
@@ -262,20 +210,17 @@
       "ignoreGlobalInterface": false
     },
     "inline_data_old_versions": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "keep_single_parameter_on_one_line": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "length": 120
     },
     "keyword_case": {
-      "enabled": true,
-      "exclude": [],
-      "reason": "",
+      "exclude": ["src/zcl_gw_openapi.clas.abap"],
+      "reason": "Generated",
       "style": "upper",
       "ignoreExceptions": true,
       "ignoreLowerClassImplmentationStatement": true,
@@ -284,19 +229,16 @@
       "ignoreFunctionModuleName": false
     },
     "line_length": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "length": 120
     },
     "line_only_punc": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "ignoreExceptions": true
     },
     "local_class_naming": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "patternKind": "required",
@@ -307,14 +249,12 @@
       "test": "^LTCL_.+$"
     },
     "local_testclass_location": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "local_variable_names": {
-      "enabled": true,
-      "exclude": [],
-      "reason": "",
+      "exclude": ["src/zcl_gw_openapi_metadata_v4.clas.abap"],
+      "reason": "ToDo",
       "patternKind": "required",
       "ignoreNames": [],
       "ignorePatterns": [],
@@ -323,22 +263,18 @@
       "expectedFS": "^<L._.+>$"
     },
     "main_file_contents": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "max_one_statement": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "message_exists": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "method_length": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "statements": 100,
@@ -346,7 +282,6 @@
       "ignoreTestClasses": false
     },
     "method_parameter_names": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "patternKind": "required",
@@ -359,36 +294,30 @@
       "exporting": "^E._.+$"
     },
     "mix_returning": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "msag_consistency": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "nesting": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "depth": 5
     },
     "newline_between_methods": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "count": 3,
       "logic": "less"
     },
     "no_public_attributes": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "allowReadOnly": false
     },
     "object_naming": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "patternKind": "required",
@@ -411,7 +340,6 @@
       "xslt": "^Z"
     },
     "obsolete_statement": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "refresh": true,
@@ -425,17 +353,14 @@
       "occurs": true
     },
     "parser_error": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "prefer_returning_to_exporting": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "preferred_compare_operator": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "badOperators": [
@@ -449,28 +374,19 @@
       ]
     },
     "prefix_is_current_class": {
-      "enabled": true,
+      "omitMeInstanceCalls": false,
       "exclude": [],
       "reason": ""
     },
     "release_idoc": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
-    "remove_descriptions": {
-      "enabled": false,
-      "exclude": [],
-      "reason": "",
-      "ignoreExceptions": false
-    },
     "rfc_error_handling": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "selection_screen_naming": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "patternKind": "required",
@@ -480,98 +396,76 @@
       "selectOption": "^S_.+$"
     },
     "sequential_blank": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "lines": 4
     },
     "short_case": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "length": 1,
       "allow": []
     },
     "sicf_consistency": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "space_before_colon": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "space_before_dot": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "ignoreGlobalDefinition": true,
       "ignoreExceptions": true
     },
     "sql_escape_host_variables": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "start_at_tab": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "superclass_final": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "tabl_enhancement_category": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "type_begin_single_include": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "type_form_parameters": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "types_naming": {
-      "enabled": true,
       "exclude": [],
       "reason": "",
       "pattern": "^TY_.+$"
     },
     "unreachable_code": {
-      "enabled": true,
-      "exclude": [],
-      "reason": ""
-    },
-    "unused_variables": {
-      "enabled": false,
       "exclude": [],
       "reason": ""
     },
     "use_new": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "when_others_last": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "whitespace_end": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     },
     "xml_consistency": {
-      "enabled": true,
       "exclude": [],
       "reason": ""
     }

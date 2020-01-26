@@ -34,7 +34,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
+CLASS zcl_gw_openapi_metadata_v4 IMPLEMENTATION.
 
 
   METHOD constructor.
@@ -146,10 +146,10 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
 *   Store description
     me->mv_description = ls_service-description.
 
-*   Set service base url (gc_uri_icf_path = 7.54, gc_root_url = 7.53 and lower)
-    ASSIGN /iwbep/cl_v4_url_util=>('gc_uri_icf_path') TO <lv_base_url>.
+*   Set service base url (gc_uri_icf_path = 7.54, gc_root_url = 7.53 and lower), not available in 7.52
+    ASSIGN ('/iwbep/cl_v4_url_util')=>('gc_uri_icf_path') TO <lv_base_url>.
     IF sy-subrc <> 0.
-      ASSIGN /iwbep/cl_v4_url_util=>('gc_root_url') TO <lv_base_url>.
+      ASSIGN ('/iwbep/cl_v4_url_util')=>('gc_root_url') TO <lv_base_url>.
     ENDIF.
 
     IF <lv_base_url> IS ASSIGNED.
@@ -191,13 +191,22 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     ls_request_base_info-service_key-repository_id = me->mv_repository.
     ls_request_base_info-service_key-service_id = me->mv_external_service.
     ls_request_base_info-service_key-service_version = me->mv_version.
-    ls_request_base_info-uri_request = lv_service && '$metadata?sap-documentation=all'.
 
     ls_request_base_info-http_headers = VALUE #( ( name = '~request_method' value = ls_request_base_info-http_method )
-                                                 ( name = '~request_uri' value = ls_request_base_info-uri_request )
                                                  ( name = 'host' value = ls_request_base_info-host_name )
                                                  ( name = 'sap-client' value = sy-mandt )
                                                  ( name = 'sap-language' value = sy-langu ) ).
+
+*   not available in 7.52
+    FIELD-SYMBOLS: <fieldvalue> TYPE data.
+    ASSIGN COMPONENT 'URI_REQUEST' OF STRUCTURE ls_request_base_info TO <fieldvalue>.
+    IF <fieldvalue> IS ASSIGNED.
+      <fieldvalue> = lv_service && '$metadata?sap-documentation=all'.
+      APPEND INITIAL LINE TO ls_request_base_info-http_headers ASSIGNING FIELD-SYMBOL(<fs_http_header>).
+      <fs_http_header>-name = '~request_uri'.
+      <fs_http_header>-value = <fieldvalue>.
+    ENDIF.
+
 
     DATA(li_request_info) = /iwbep/cl_v4s_runtime_factory=>create_request_info( ).
     TRY.
