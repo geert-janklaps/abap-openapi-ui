@@ -161,7 +161,8 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
     DATA(lv_md_url_full) = lv_md_url.
     IF lv_md_url IS NOT INITIAL.
       DATA(lv_leng) = strlen( lv_md_url ).
-      IF lv_leng > 7 AND lv_md_url(7) = 'http://'.
+      IF lv_leng > 7 AND
+        ( lv_md_url(7) = 'http://' OR lv_md_url(8) = 'https://').
         SEARCH lv_md_url FOR '/sap/opu/'.
         IF sy-subrc = 0.
           lv_md_url = lv_md_url+sy-fdpos.
