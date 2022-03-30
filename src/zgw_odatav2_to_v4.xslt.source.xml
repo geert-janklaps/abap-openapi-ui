@@ -226,8 +226,8 @@
       <xsl:apply-templates />
       <xsl:apply-templates
         select="*[local-name()='EntityContainer' and @m:IsDefaultEntityContainer='true']/*[local-name()='FunctionImport']" mode="Schema" />
+      <xsl:apply-templates select="edm2:EntityType[@sap:semantics='parameters']" mode="readrestrictions" />
     </Schema>
-    <xsl:apply-templates select="edm2:EntityType[@sap:semantics='parameters']" mode="readrestrictions" />
   </xsl:template>
 
   <xsl:template match="edm3:Schema">
@@ -405,6 +405,11 @@
           </PropertyValue>
         </Record>
       </Annotation>
+
+      <!-- TODO: un-hack -->
+      <xsl:if test="$entityType/@sap:semantics = 'parameters'">
+        <Annotation Term="sap.parameters"/>
+      </xsl:if>
     </EntitySet>
   </xsl:template>
 
@@ -1033,7 +1038,7 @@
     <xsl:if test="$required or $required-properties or $excluded-properties">
       <xsl:element name="Annotation">
         <xsl:attribute name="Term">
-          <xsl:value-of select="concat('Capabilities.',$capability,'Restrictions')" />
+          <xsl:value-of select="concat($Capabilities,'.',$capability,'Restrictions')" />
         </xsl:attribute>
         <Record>
           <xsl:if test="$required">
