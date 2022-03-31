@@ -1,5 +1,3 @@
-[![build status](https://gitlab.com/geertjanklaps/abap-openapi-ui/badges/master/build.svg)](https://gitlab.com/geertjanklaps/abap-openapi-ui/commits/master)
-
 # ABAP OpenAPI UI
 OpenAPI / Swagger UI integration for SAP NetWeaver Gateway
 
@@ -17,8 +15,6 @@ For questions, bugs or feature requests please create an [issue](https://gitlab.
 # Contributing
 Check the contributing / development guidelines [here](CONTRIBUTING.md)
 
-Discussions and suggestions can be added to the [Slack Group](https://abap-openapi-ui.slack.com)
-
 # Credits
 ABAP OpenAPI UI is based on 2 open source projects:
 *  [Swagger UI](https://github.com/swagger-api/swagger-ui)
@@ -26,5 +22,6 @@ ABAP OpenAPI UI is based on 2 open source projects:
 
 The ABAP OpenAPI UI code is automatically checked and validated by [abaplint](https://github.com/abaplint/abaplint).
 
-This personal project was started (and is still being maintained) on a development system provided by:
-[![tvc-logo](https://www.thevaluechain.be/wp-content/uploads/2016/08/The-Value-Chain-Logo-final-1.png)](https://www.thevaluechain.be/)
+This personal project was started (and is still being maintained) on a development system provided by TheValueChain:
+
+[![tvc-logo](docs/tvc-banner.jpg)](https://www.thevaluechain.eu)
