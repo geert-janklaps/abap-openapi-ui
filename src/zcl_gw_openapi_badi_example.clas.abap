@@ -50,8 +50,7 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
     DATA(li_parser) = li_ixml->create_parser(
                         document       = li_document
                         istream        = li_stream
-                        stream_factory = li_stream_factory
-                      ).
+                        stream_factory = li_stream_factory ).
 
     li_parser->parse( ).
 
@@ -86,8 +85,7 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
     DATA(li_parser) = li_ixml->create_parser(
                         document       = li_document
                         istream        = li_stream
-                        stream_factory = li_stream_factory
-                      ).
+                        stream_factory = li_stream_factory ).
 
     li_parser->parse( ).
 
