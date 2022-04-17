@@ -107,8 +107,9 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
 
 
   METHOD _read_metadata.
-    DATA: lv_service   TYPE string,
-          lv_path(255) TYPE c.
+    DATA: lb_openapi_badi TYPE REF TO zgw_openapi_badi,
+          lv_service      TYPE string,
+          lv_path(255)    TYPE c.
 
 *   Read service details
     SELECT SINGLE h~srv_identifier, h~namespace, h~service_name, h~service_version, t~description
@@ -215,7 +216,24 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
     DATA(li_edm) = li_service->get_entity_data_model( ).
     DATA(li_metadata) = li_edm->get_service_metadata( ).
 
-    li_metadata->get_metadata( IMPORTING ev_metadata = rv_metadata ).
+    li_metadata->get_metadata( IMPORTING ev_metadata = DATA(lv_metadata) ).
+
+*   Call BADI (Allow modifications to metadata document)
+    GET BADI lb_openapi_badi.
+
+    CALL BADI lb_openapi_badi->procces_odata_v2_metadata
+      EXPORTING
+        iv_namespace = ls_service-namespace
+        iv_service_name = ls_service-service_name
+        iv_service_version = ls_service-service_version
+        iv_metadata = lv_metadata
+      RECEIVING
+        rv_metadata = rv_metadata.
+
+*   Check if metadata was set by BADI, if initial take default metadata document
+    IF rv_metadata IS INITIAL.
+      rv_metadata = lv_metadata.
+    ENDIF.
 
   ENDMETHOD.
 ENDCLASS.

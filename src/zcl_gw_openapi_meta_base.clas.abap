@@ -44,7 +44,8 @@ CLASS ZCL_GW_OPENAPI_META_BASE IMPLEMENTATION.
 
 
   METHOD convert_odatav4_to_json.
-    DATA: lt_parameters TYPE abap_trans_parmbind_tab.
+    DATA: lb_openapi_badi TYPE REF TO zgw_openapi_badi,
+          lt_parameters   TYPE abap_trans_parmbind_tab.
 
 *   Set transformation parameters
     DATA(lv_version) = me->mv_version.
@@ -65,9 +66,26 @@ CLASS ZCL_GW_OPENAPI_META_BASE IMPLEMENTATION.
 *   Convert metadata document to openapi
     CALL TRANSFORMATION zgw_odatav4_to_openapi
       SOURCE XML iv_metadata_v4
-      RESULT XML rv_json
+      RESULT XML DATA(lv_json)
       PARAMETERS (lt_parameters).
 
+*   Call BADI (Allow modifications to OpenAPI JSON)
+    GET BADI lb_openapi_badi.
+
+    CALL BADI lb_openapi_badi->enhance_openapi_json
+      EXPORTING
+        iv_group_id        = me->mv_group_id
+        iv_repository_id   = me->mv_repository
+        iv_service_id      = me->mv_external_service
+        iv_service_version = me->mv_version
+        iv_openapi_json    = lv_json
+      RECEIVING
+        rv_openapi_json    = rv_json.
+
+*   Check if OpenAPI JSON was set by BADI, if initial take default OpenAPI JSON
+    IF rv_json IS INITIAL.
+      rv_json = lv_json.
+    ENDIF.
 
   ENDMETHOD.
 ENDCLASS.

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>ZIF_GW_OPENAPI_BADI</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>Interface for BAdI: ZGW_OPENAPI_BADI</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>X</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_GW_OPENAPI_BADI</CLSNAME>
+     <CMPNAME>ENHANCE_OPENAPI_JSON</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Enhance OpenAPI JSON</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_GW_OPENAPI_BADI</CLSNAME>
+     <CMPNAME>PROCCES_ODATA_V2_METADATA</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Process OData V2 Metadata before conversion to openAPI spec.</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_GW_OPENAPI_BADI</CLSNAME>
+     <CMPNAME>PROCCES_ODATA_V4_METADATA</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Process OData V4 Metadata before conversion to openAPI spec.</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
