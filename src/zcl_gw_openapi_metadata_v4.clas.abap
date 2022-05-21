@@ -131,7 +131,8 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
           lt_service_version   TYPE RANGE OF /iwbep/v4_med_service_version,
           ls_request_base_info TYPE /iwbep/if_v4_request_info=>ty_s_base_info,
           lv_service           TYPE string,
-          lv_path(255)         TYPE c.
+          lv_path(255)         TYPE c,
+          lv_last_modified     TYPE timestamp.
 
     FIELD-SYMBOLS: <lv_base_url> TYPE string.
 
@@ -251,6 +252,23 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
         CALL METHOD li_request_info->('INIT')
           EXPORTING
             is_base_info = ls_request_base_info.
+    ENDTRY.
+
+*   Netweaver 7.55+ => cache timestamp of group must be set in request to prevent dump
+    DATA(lo_registry) = /iwbep/cl_v4_registry=>get_instance( ).
+    TRY.
+        CALL METHOD lo_registry->('GET_LAST_MODIFIED_OF_GROUP')
+          EXPORTING
+            iv_service_group_id = me->mv_group_id
+          RECEIVING
+            rv_last_modified    = lv_last_modified.
+
+        CALL METHOD li_request_info->('SET_SRV_GROUP_CACHE_TIMESTAMP')
+          EXPORTING
+            iv_last_modified = lv_last_modified.
+
+      CATCH cx_sy_dyn_call_illegal_method.
+
     ENDTRY.
 
     li_request_info->set_lib_request_info( NEW /iwbep/cl_od_request_info( ) ).
