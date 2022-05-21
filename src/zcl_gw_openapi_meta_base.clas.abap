@@ -70,17 +70,26 @@ CLASS ZCL_GW_OPENAPI_META_BASE IMPLEMENTATION.
       PARAMETERS (lt_parameters).
 
 *   Call BADI (Allow modifications to OpenAPI JSON)
-    GET BADI lb_openapi_badi.
+    TRY.
+        GET BADI lb_openapi_badi.
 
-    CALL BADI lb_openapi_badi->enhance_openapi_json
-      EXPORTING
-        iv_group_id        = me->mv_group_id
-        iv_repository_id   = me->mv_repository
-        iv_service_id      = me->mv_external_service
-        iv_service_version = me->mv_version
-        iv_openapi_json    = lv_json
-      RECEIVING
-        rv_openapi_json    = rv_json.
+        CALL BADI lb_openapi_badi->enhance_openapi_json
+          EXPORTING
+            iv_group_id        = me->mv_group_id
+            iv_repository_id   = me->mv_repository
+            iv_service_id      = me->mv_external_service
+            iv_service_version = me->mv_version
+            iv_openapi_json    = lv_json
+          RECEIVING
+            rv_openapi_json    = rv_json.
+      CATCH cx_badi_context_error
+              cx_badi_filter_error
+              cx_badi_initial_context
+              cx_badi_multiply_implemented
+              cx_badi_not_implemented
+              cx_badi_unknown_error.
+
+    ENDTRY.
 
 *   Check if OpenAPI JSON was set by BADI, if initial take default OpenAPI JSON
     IF rv_json IS INITIAL.

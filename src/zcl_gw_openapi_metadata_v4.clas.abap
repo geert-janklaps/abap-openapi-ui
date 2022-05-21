@@ -303,18 +303,27 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     li_metadata->get_metadata( IMPORTING ev_metadata = DATA(lv_metadata) ).
 
 *   Call BADI (Allow modifications to metadata document)
-    GET BADI lb_openapi_badi.
+    TRY.
+        GET BADI lb_openapi_badi.
 
-    CALL BADI lb_openapi_badi->procces_odata_v4_metadata
-      EXPORTING
-        iv_group_id        = ls_service-group_id
-        iv_repository_id   = ls_service-repository_id
-        iv_service_id      = ls_service-service_id
-        iv_service_version = ls_service-service_version
-        iv_metadata        = lv_metadata
-        ii_request_info    = li_request_info
-      RECEIVING
-        rv_metadata        = rv_metadata.
+        CALL BADI lb_openapi_badi->procces_odata_v4_metadata
+          EXPORTING
+            iv_group_id        = ls_service-group_id
+            iv_repository_id   = ls_service-repository_id
+            iv_service_id      = ls_service-service_id
+            iv_service_version = ls_service-service_version
+            iv_metadata        = lv_metadata
+            ii_request_info    = li_request_info
+          RECEIVING
+            rv_metadata        = rv_metadata.
+      CATCH cx_badi_context_error
+            cx_badi_filter_error
+            cx_badi_initial_context
+            cx_badi_multiply_implemented
+            cx_badi_not_implemented
+            cx_badi_unknown_error.
+
+    ENDTRY.
 
 *   Check if metadata was set by BADI, if initial take default metadata document
     IF rv_metadata IS INITIAL.
