@@ -175,7 +175,7 @@ CLASS lcl_screen_handler IMPLEMENTATION.
         <ls_service>-changed_at = ls_group-changed_ts.
 
         CONVERT TIME STAMP <ls_service>-created_at TIME ZONE sy-zonlo
-        INTO DATE <ls_service>-created_date TIME <ls_service>-created_time.
+          INTO DATE <ls_service>-created_date TIME <ls_service>-created_time.
 
         CONVERT TIME STAMP <ls_service>-changed_at TIME ZONE sy-zonlo
           INTO DATE <ls_service>-changed_date TIME <ls_service>-changed_time.
