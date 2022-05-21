@@ -152,9 +152,8 @@ CLASS lcl_screen_handler IMPLEMENTATION.
             iv_top                   = 999999
             iv_skip                  = 0
           IMPORTING
-            et_srv_assignments_w_txt = DATA(lt_services)
-        ).
-      CATCH /iwfnd/cx_gateway. " SAP Gateway Exception
+            et_srv_assignments_w_txt = DATA(lt_services) ).
+      CATCH /iwfnd/cx_gateway.
 
     ENDTRY.
 

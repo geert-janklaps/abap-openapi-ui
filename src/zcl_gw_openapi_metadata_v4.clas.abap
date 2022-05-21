@@ -124,11 +124,11 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     DATA: lo_service_factory   TYPE REF TO /iwbep/cl_od_svc_factory,
           lb_openapi_badi      TYPE REF TO zgw_openapi_badi,
           li_service_factory   TYPE REF TO /iwcor/if_od_svc_factory,
-          lt_description TYPE RANGE OF /iwbep/v4_reg_description,
-          lt_group_id TYPE RANGE OF /iwbep/v4_med_group_id,
-          lt_repository_id   TYPE RANGE OF /iwbep/v4_med_repository_id,
-          lt_service_id      TYPE RANGE OF /iwbep/v4_med_service_id,
-          lt_service_version TYPE RANGE OF /iwbep/v4_med_service_version,
+          lt_description       TYPE RANGE OF /iwbep/v4_reg_description,
+          lt_group_id          TYPE RANGE OF /iwbep/v4_med_group_id,
+          lt_repository_id     TYPE RANGE OF /iwbep/v4_med_repository_id,
+          lt_service_id        TYPE RANGE OF /iwbep/v4_med_service_id,
+          lt_service_version   TYPE RANGE OF /iwbep/v4_med_service_version,
           ls_request_base_info TYPE /iwbep/if_v4_request_info=>ty_s_base_info,
           lv_service           TYPE string,
           lv_path(255)         TYPE c.
@@ -142,20 +142,19 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     APPEND VALUE #( sign = 'I' option = 'EQ' low = me->mv_version ) TO lt_service_version.
 
     TRY.
-      /iwfnd/cl_v4_registry_proxy=>find_srv_assignments_by_ranges(
-        EXPORTING
-          iv_system_alias          = ''
-          it_range_group_id        = lt_group_id
-          it_range_repository_id   = lt_repository_id
-          it_range_service_id      = lt_service_id
-          it_range_service_version = lt_service_version
-          it_range_description     = lt_description
-          iv_top                   = 1
-          iv_skip                  = 0
-        IMPORTING
-          et_srv_assignments_w_txt = DATA(lt_services)
-      ).
-      CATCH /iwfnd/cx_gateway. " SAP Gateway Exception
+        /iwfnd/cl_v4_registry_proxy=>find_srv_assignments_by_ranges(
+          EXPORTING
+            iv_system_alias          = ''
+            it_range_group_id        = lt_group_id
+            it_range_repository_id   = lt_repository_id
+            it_range_service_id      = lt_service_id
+            it_range_service_version = lt_service_version
+            it_range_description     = lt_description
+            iv_top                   = 1
+            iv_skip                  = 0
+          IMPORTING
+            et_srv_assignments_w_txt = DATA(lt_services) ).
+      CATCH /iwfnd/cx_gateway.
 
     ENDTRY.
 
@@ -290,14 +289,14 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
 
     CALL BADI lb_openapi_badi->procces_odata_v4_metadata
       EXPORTING
-        iv_group_id = ls_service-group_id
-        iv_repository_id = ls_service-repository_id
-        iv_service_id = ls_service-service_id
+        iv_group_id        = ls_service-group_id
+        iv_repository_id   = ls_service-repository_id
+        iv_service_id      = ls_service-service_id
         iv_service_version = ls_service-service_version
-        iv_metadata = lv_metadata
-        ii_request_info = li_request_info
+        iv_metadata        = lv_metadata
+        ii_request_info    = li_request_info
       RECEIVING
-        rv_metadata = rv_metadata.
+        rv_metadata        = rv_metadata.
 
 *   Check if metadata was set by BADI, if initial take default metadata document
     IF rv_metadata IS INITIAL.
