@@ -41,16 +41,16 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
 *   Call super class constructor
     super->constructor( ).
 
-*   Check if service exists
-    SELECT SINGLE a~repository_id, a~group_id, a~service_id, s~service_version
-      FROM /iwbep/i_v4_msga AS a
-      INNER JOIN /iwbep/i_v4_msrv AS s ON a~service_id = s~service_id
-      INNER JOIN /iwfnd/c_v4_msgr AS p ON a~group_id = p~group_id
-      INTO @DATA(ls_service)
-      WHERE a~group_id = @me->mv_group_id
-      AND a~service_id = @me->mv_external_service
-      AND a~repository_id = @me->mv_repository
-      AND s~service_version = @me->mv_version.
+**   Check if service exists
+*    SELECT SINGLE a~repository_id, a~group_id, a~service_id, s~service_version
+*      FROM /iwbep/i_v4_msga AS a
+*      INNER JOIN /iwbep/i_v4_msrv AS s ON a~service_id = s~service_id
+*      INNER JOIN /iwfnd/c_v4_msgr AS p ON a~group_id = p~group_id
+*      INTO @DATA(ls_service)
+*      WHERE a~group_id = @me->mv_group_id
+*      AND a~service_id = @me->mv_external_service
+*      AND a~repository_id = @me->mv_repository
+*      AND s~service_version = @me->mv_version.
 
 *   Store service parameters
     me->mv_repository = iv_repository.
@@ -124,6 +124,11 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     DATA: lo_service_factory   TYPE REF TO /iwbep/cl_od_svc_factory,
           lb_openapi_badi      TYPE REF TO zgw_openapi_badi,
           li_service_factory   TYPE REF TO /iwcor/if_od_svc_factory,
+          lt_description TYPE RANGE OF /iwbep/v4_reg_description,
+          lt_group_id TYPE RANGE OF /iwbep/v4_med_group_id,
+          lt_repository_id   TYPE RANGE OF /iwbep/v4_med_repository_id,
+          lt_service_id      TYPE RANGE OF /iwbep/v4_med_service_id,
+          lt_service_version TYPE RANGE OF /iwbep/v4_med_service_version,
           ls_request_base_info TYPE /iwbep/if_v4_request_info=>ty_s_base_info,
           lv_service           TYPE string,
           lv_path(255)         TYPE c.
@@ -131,18 +136,30 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     FIELD-SYMBOLS: <lv_base_url> TYPE string.
 
 *   Read service details
-    SELECT SINGLE a~repository_id, a~group_id, a~service_id, s~service_version, t~description
-      FROM /iwbep/i_v4_msga AS a
-      INNER JOIN /iwbep/i_v4_msrv AS s ON a~service_id = s~service_id
-      INNER JOIN /iwfnd/c_v4_msgr AS p ON a~group_id = p~group_id
-      LEFT OUTER JOIN /iwbep/i_v4_msrt AS t ON s~service_id = t~service_id
-                                            AND s~service_version = t~service_version
-                                            AND t~language = @sy-langu
-      INTO @DATA(ls_service)
-      WHERE a~group_id = @me->mv_group_id
-      AND a~service_id = @me->mv_external_service
-      AND a~repository_id = @me->mv_repository
-      AND s~service_version = @me->mv_version.
+    APPEND VALUE #( sign = 'I' option = 'EQ' low = me->mv_group_id ) TO lt_group_id.
+    APPEND VALUE #( sign = 'I' option = 'EQ' low = me->mv_repository ) TO lt_repository_id.
+    APPEND VALUE #( sign = 'I' option = 'EQ' low = me->mv_external_service ) TO lt_service_id.
+    APPEND VALUE #( sign = 'I' option = 'EQ' low = me->mv_version ) TO lt_service_version.
+
+    TRY.
+      /iwfnd/cl_v4_registry_proxy=>find_srv_assignments_by_ranges(
+        EXPORTING
+          iv_system_alias          = ''
+          it_range_group_id        = lt_group_id
+          it_range_repository_id   = lt_repository_id
+          it_range_service_id      = lt_service_id
+          it_range_service_version = lt_service_version
+          it_range_description     = lt_description
+          iv_top                   = 1
+          iv_skip                  = 0
+        IMPORTING
+          et_srv_assignments_w_txt = DATA(lt_services)
+      ).
+      CATCH /iwfnd/cx_gateway. " SAP Gateway Exception
+
+    ENDTRY.
+
+    READ TABLE lt_services INTO DATA(ls_service) INDEX 1.
 
 *   Store description
     me->mv_description = ls_service-description.
@@ -156,12 +173,24 @@ CLASS ZCL_GW_OPENAPI_METADATA_V4 IMPLEMENTATION.
     IF <lv_base_url> IS ASSIGNED.
       lv_service = <lv_base_url>.
     ELSE.
-      lv_service = '/sap/opu/odata4'.
+      lv_service = '/sap/opu/odata4/'.
     ENDIF.
 
-    lv_service = lv_service && ls_service-group_id && '/'
+*   Group ID in URL format always starts with namespace, if not set use /SAP/ namespace
+    DATA(lv_group_id) = ls_service-group_id.
+    IF lv_group_id(1) <> '/'.
+      lv_group_id = '/SAP/' && lv_group_id.
+    ENDIF.
+
+*   Service ID in URL format always starts with namespace, if not set use /SAP/ namespace
+    DATA(lv_service_id) = ls_service-service_id.
+    IF lv_service_id(1) <> '/'.
+      lv_service_id = '/SAP/' && lv_service_id.
+    ENDIF.
+
+    lv_service = lv_service && lv_group_id && '/'
                && ls_service-repository_id && '/'
-               && ls_service-service_id && '/'
+               && lv_service_id && '/'
                && ls_service-service_version.
 
     lv_service = to_lower( lv_service ).

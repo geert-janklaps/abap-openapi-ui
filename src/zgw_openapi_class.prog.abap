@@ -27,6 +27,14 @@ CLASS lcl_screen_handler DEFINITION CREATE PRIVATE.
              service_id      TYPE /iwbep/v4_med_service_id,
              service_version TYPE /iwbep/v4_med_service_version,
              description     TYPE /iwbep/v4_reg_description,
+             created_by      TYPE cruser,
+             created_at      TYPE tzntstmps,
+             created_date    TYPE d,
+             created_time    TYPE t,
+             changed_by      TYPE chuser,
+             changed_at      TYPE tzntstmps,
+             changed_date    TYPE d,
+             changed_time    TYPE t,
            END OF ty_v4_service_s.
 
 
@@ -36,9 +44,9 @@ CLASS lcl_screen_handler DEFINITION CREATE PRIVATE.
     CLASS-METHODS display_alv.
 
     CLASS-METHODS handle_link_click
-                  FOR EVENT link_click OF cl_salv_events_table
+      FOR EVENT link_click OF cl_salv_events_table
       IMPORTING row
-                  column.
+                column.
 
     CLASS-DATA: gt_v2_data TYPE TABLE OF ty_v2_service_s,
                 gt_v4_data TYPE TABLE OF ty_v4_service_s.
@@ -128,21 +136,56 @@ CLASS lcl_screen_handler IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_v4_data.
+    DATA: lt_description TYPE RANGE OF /iwbep/v4_reg_description,
+          ls_service_key TYPE /iwbep/s_v4_med_service_key.
 
-*   Read service details
-    SELECT a~repository_id, a~group_id, a~service_id, s~service_version, t~description
-      FROM /iwbep/i_v4_msga AS a
-      INNER JOIN /iwbep/i_v4_msrv AS s ON a~service_id = s~service_id
-      INNER JOIN /iwfnd/c_v4_msgr AS p ON a~group_id = p~group_id
-      LEFT OUTER JOIN /iwbep/i_v4_msrt AS t ON s~service_id = t~service_id
-                                            AND s~service_version = t~service_version
-                                            AND t~language = @sy-langu
-      INTO CORRESPONDING FIELDS OF TABLE @gt_v4_data
-      WHERE a~group_id IN @s_grp4
-      AND a~service_id IN @s_name4
-      AND a~repository_id IN @s_rep4
-      AND s~service_version IN @s_vers4
-      ORDER BY a~service_id ASCENDING.
+*   Get service assignments
+    TRY.
+        /iwfnd/cl_v4_registry_proxy=>find_srv_assignments_by_ranges(
+          EXPORTING
+            iv_system_alias          = ''
+            it_range_group_id        = s_grp4[]
+            it_range_repository_id   = s_rep4[]
+            it_range_service_id      = s_name4[]
+            it_range_service_version = s_vers4[]
+            it_range_description     = lt_description
+            iv_top                   = 999999
+            iv_skip                  = 0
+          IMPORTING
+            et_srv_assignments_w_txt = DATA(lt_services)
+        ).
+      CATCH /iwfnd/cx_gateway. " SAP Gateway Exception
+
+    ENDTRY.
+
+    MOVE-CORRESPONDING lt_services TO gt_v4_data.
+
+*   Get publishing configuration and published groups
+    DATA(lo_publishing_config) = /iwfnd/cl_v4_publishing_config=>get_instance( ).
+    DATA(lt_groups) = lo_publishing_config->get_groups_by_id( ).
+
+*   Remove unpublished services and convert timestamps to dates and times for output
+    LOOP AT gt_v4_data ASSIGNING FIELD-SYMBOL(<ls_service>).
+      DATA(lv_index) = sy-tabix.
+
+      READ TABLE lt_groups WITH KEY group_id = <ls_service>-group_id INTO DATA(ls_group).
+      IF sy-subrc = 0.
+        <ls_service>-created_by = ls_group-created_by.
+        <ls_service>-changed_by = ls_group-changed_by.
+        <ls_service>-created_at = ls_group-created_ts.
+        <ls_service>-changed_at = ls_group-changed_ts.
+
+        CONVERT TIME STAMP <ls_service>-created_at TIME ZONE sy-zonlo
+        INTO DATE <ls_service>-created_date TIME <ls_service>-created_time.
+
+        CONVERT TIME STAMP <ls_service>-changed_at TIME ZONE sy-zonlo
+          INTO DATE <ls_service>-changed_date TIME <ls_service>-changed_time.
+
+      ELSE.
+        DELETE gt_v4_data INDEX lv_index.
+      ENDIF.
+
+    ENDLOOP.
 
   ENDMETHOD.
 
@@ -180,36 +223,36 @@ CLASS lcl_screen_handler IMPLEMENTATION.
       lo_column ?= lo_columns->get_column( columnname = 'SERVICE_NAME' ).
       lo_column->set_cell_type( if_salv_c_cell_type=>hotspot ).
 
-      lo_column ?= lo_columns->get_column( columnname = 'CREATED_AT' ).
-      lo_column->set_technical( ).
-
-      lo_column ?= lo_columns->get_column( columnname = 'CREATED_DATE' ).
-      lo_column->set_short_text( 'Created Dt' ).
-      lo_column->set_medium_text( 'Created Date' ).
-      lo_column->set_long_text( 'Created Date' ).
-
-      lo_column ?= lo_columns->get_column( columnname = 'CREATED_TIME' ).
-      lo_column->set_short_text( 'Created Tm' ).
-      lo_column->set_medium_text( 'Created Time' ).
-      lo_column->set_long_text( 'Created Time' ).
-
-      lo_column ?= lo_columns->get_column( columnname = 'CHANGED_AT' ).
-      lo_column->set_technical( ).
-
-      lo_column ?= lo_columns->get_column( columnname = 'CHANGED_DATE' ).
-      lo_column->set_short_text( 'Changed Dt' ).
-      lo_column->set_medium_text( 'Changed Date' ).
-      lo_column->set_long_text( 'Changed Date' ).
-
-      lo_column ?= lo_columns->get_column( columnname = 'CHANGED_TIME' ).
-      lo_column->set_short_text( 'Changed Tm' ).
-      lo_column->set_medium_text( 'Changed Time' ).
-      lo_column->set_long_text( 'Changed Time' ).
-
     ELSE.
       lo_column ?= lo_columns->get_column( columnname = 'SERVICE_ID' ).
       lo_column->set_cell_type( if_salv_c_cell_type=>hotspot ).
     ENDIF.
+
+    lo_column ?= lo_columns->get_column( columnname = 'CREATED_AT' ).
+    lo_column->set_technical( ).
+
+    lo_column ?= lo_columns->get_column( columnname = 'CREATED_DATE' ).
+    lo_column->set_short_text( 'Created Dt' ).
+    lo_column->set_medium_text( 'Created Date' ).
+    lo_column->set_long_text( 'Created Date' ).
+
+    lo_column ?= lo_columns->get_column( columnname = 'CREATED_TIME' ).
+    lo_column->set_short_text( 'Created Tm' ).
+    lo_column->set_medium_text( 'Created Time' ).
+    lo_column->set_long_text( 'Created Time' ).
+
+    lo_column ?= lo_columns->get_column( columnname = 'CHANGED_AT' ).
+    lo_column->set_technical( ).
+
+    lo_column ?= lo_columns->get_column( columnname = 'CHANGED_DATE' ).
+    lo_column->set_short_text( 'Changed Dt' ).
+    lo_column->set_medium_text( 'Changed Date' ).
+    lo_column->set_long_text( 'Changed Date' ).
+
+    lo_column ?= lo_columns->get_column( columnname = 'CHANGED_TIME' ).
+    lo_column->set_short_text( 'Changed Tm' ).
+    lo_column->set_medium_text( 'Changed Time' ).
+    lo_column->set_long_text( 'Changed Time' ).
 
 *   Enable events
     DATA(lo_events) = lo_alv->get_event( ).
