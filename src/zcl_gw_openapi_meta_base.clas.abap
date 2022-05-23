@@ -66,7 +66,7 @@ CLASS ZCL_GW_OPENAPI_META_BASE IMPLEMENTATION.
 *   Convert metadata document to openapi
     CALL TRANSFORMATION zgw_odatav4_to_openapi
       SOURCE XML iv_metadata_v4
-      RESULT XML DATA(lv_json)
+      RESULT XML rv_json
       PARAMETERS (lt_parameters).
 
 *   Call BADI (Allow modifications to OpenAPI JSON)
@@ -79,9 +79,8 @@ CLASS ZCL_GW_OPENAPI_META_BASE IMPLEMENTATION.
             iv_repository_id   = me->mv_repository
             iv_service_id      = me->mv_external_service
             iv_service_version = me->mv_version
-            iv_openapi_json    = lv_json
-          RECEIVING
-            rv_openapi_json    = rv_json.
+          CHANGING
+            cv_openapi_json    = rv_json.
       CATCH cx_badi_context_error
               cx_badi_filter_error
               cx_badi_initial_context
@@ -90,11 +89,6 @@ CLASS ZCL_GW_OPENAPI_META_BASE IMPLEMENTATION.
               cx_badi_unknown_error.
 
     ENDTRY.
-
-*   Check if OpenAPI JSON was set by BADI, if initial take default OpenAPI JSON
-    IF rv_json IS INITIAL.
-      rv_json = lv_json.
-    ENDIF.
 
   ENDMETHOD.
 ENDCLASS.

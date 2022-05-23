@@ -20,7 +20,7 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
     DATA li_value_node TYPE REF TO if_sxml_value_node.
 
 *   Read default metadata document into XML object
-    DATA(li_sxml_reader) = cl_sxml_string_reader=>create( iv_openapi_json ).
+    DATA(li_sxml_reader) = cl_sxml_string_reader=>create( cv_openapi_json ).
     DATA(lo_sxml_writer) = cl_sxml_string_writer=>create( type = if_sxml=>co_xt_json ).
 
     DO.
@@ -34,8 +34,11 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
       lo_sxml_writer->if_sxml_writer~write_node( li_node ).
     ENDDO.
 
+*   Clear existing openapi specification
+    CLEAR cv_openapi_json.
+
 *   Return OpenAPI JSON in xstring format
-    rv_openapi_json = lo_sxml_writer->get_output( ).
+    cv_openapi_json = lo_sxml_writer->get_output( ).
 
   ENDMETHOD.
 
@@ -44,7 +47,7 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
 *   Read default metadata document into XML object
     DATA(li_ixml) = cl_ixml=>create( ).
     DATA(li_stream_factory) = li_ixml->create_stream_factory( ).
-    DATA(li_stream) = li_stream_factory->create_istream_xstring( iv_metadata ).
+    DATA(li_stream) = li_stream_factory->create_istream_xstring( cv_metadata ).
     DATA(li_document) = li_ixml->create_document( ).
 
     DATA(li_parser) = li_ixml->create_parser(
@@ -63,8 +66,11 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
                           byte_order    = if_ixml_encoding=>co_none
                           character_set = 'utf-8' ).
 
+*   Clear existing metadata
+    CLEAR cv_metadata.
+
 *   Create output stream and set encoding
-    DATA(li_ostream) = li_ixml->create_stream_factory( )->create_ostream_xstring( string = rv_metadata ).
+    DATA(li_ostream) = li_ixml->create_stream_factory( )->create_ostream_xstring( string = cv_metadata ).
     li_ostream->set_encoding( li_encoding ).
 
 *   Convert XML object to binary
@@ -79,7 +85,7 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
 *   Read default metadata document into XML object
     DATA(li_ixml) = cl_ixml=>create( ).
     DATA(li_stream_factory) = li_ixml->create_stream_factory( ).
-    DATA(li_stream) = li_stream_factory->create_istream_xstring( iv_metadata ).
+    DATA(li_stream) = li_stream_factory->create_istream_xstring( cv_metadata ).
     DATA(li_document) = li_ixml->create_document( ).
 
     DATA(li_parser) = li_ixml->create_parser(
@@ -102,8 +108,11 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
                           byte_order    = if_ixml_encoding=>co_none
                           character_set = 'utf-8' ).
 
+*   Clear existing metadata
+    CLEAR cv_metadata.
+
 *   Create output stream and set encoding
-    DATA(li_ostream) = li_ixml->create_stream_factory( )->create_ostream_xstring( string = rv_metadata ).
+    DATA(li_ostream) = li_ixml->create_stream_factory( )->create_ostream_xstring( string = cv_metadata ).
     li_ostream->set_encoding( li_encoding ).
 
 *   Convert XML object to binary

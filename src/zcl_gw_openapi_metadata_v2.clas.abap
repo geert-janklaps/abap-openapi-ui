@@ -216,7 +216,7 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
     DATA(li_edm) = li_service->get_entity_data_model( ).
     DATA(li_metadata) = li_edm->get_service_metadata( ).
 
-    li_metadata->get_metadata( IMPORTING ev_metadata = DATA(lv_metadata) ).
+    li_metadata->get_metadata( IMPORTING ev_metadata = rv_metadata ).
 
 *   Call BADI (Allow modifications to metadata document)
     TRY.
@@ -227,9 +227,9 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
             iv_namespace       = ls_service-namespace
             iv_service_name    = ls_service-service_name
             iv_service_version = ls_service-service_version
-            iv_metadata        = lv_metadata
-          RECEIVING
-            rv_metadata        = rv_metadata.
+          CHANGING
+            cv_metadata        = rv_metadata.
+
       CATCH cx_badi_context_error
               cx_badi_filter_error
               cx_badi_initial_context
@@ -238,11 +238,6 @@ CLASS ZCL_GW_OPENAPI_METADATA_V2 IMPLEMENTATION.
               cx_badi_unknown_error.
 
     ENDTRY.
-
-*   Check if metadata was set by BADI, if initial take default metadata document
-    IF rv_metadata IS INITIAL.
-      rv_metadata = lv_metadata.
-    ENDIF.
 
   ENDMETHOD.
 ENDCLASS.
