@@ -124,6 +124,9 @@ CLASS ZCL_GW_OPENAPI_BADI_EXAMPLE IMPLEMENTATION.
   METHOD zif_gw_openapi_badi~update_openapi_info_attributes.
 
     "Update title, version and / or description if needed
+    cv_title = cv_title.
+    cv_version = cv_version.
+    cv_description = cv_description.
 
   ENDMETHOD.
 ENDCLASS.
