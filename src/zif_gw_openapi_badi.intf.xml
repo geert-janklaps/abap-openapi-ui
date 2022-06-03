@@ -29,6 +29,12 @@
      <LANGU>E</LANGU>
      <DESCRIPT>Process OData V4 Metadata before conversion to openAPI spec.</DESCRIPT>
     </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZIF_GW_OPENAPI_BADI</CLSNAME>
+     <CMPNAME>UPDATE_OPENAPI_INFO_ATTRIBUTES</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Update OpenAPI Info Attributes</DESCRIPT>
+    </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>
  </asx:abap>

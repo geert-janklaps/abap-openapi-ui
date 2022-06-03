@@ -45,12 +45,41 @@ CLASS ZCL_GW_OPENAPI_META_BASE IMPLEMENTATION.
 
   METHOD convert_odatav4_to_json.
     DATA: lb_openapi_badi TYPE REF TO zgw_openapi_badi,
-          lt_parameters   TYPE abap_trans_parmbind_tab.
+          lt_parameters   TYPE abap_trans_parmbind_tab,
+          lv_title        TYPE string,
+          lv_version      TYPE string,
+          lv_description  TYPE string.
 
 *   Set transformation parameters
-    DATA(lv_version) = me->mv_version.
+    lv_version = me->mv_version.
     SHIFT lv_version LEFT DELETING LEADING '0'.
     lv_version = 'V' && lv_version.
+
+    lv_title = me->mv_external_service.
+    lv_description = me->mv_description.
+
+*   Call BADI (Allow modifications to OpenAPI JSON)
+    TRY.
+        GET BADI lb_openapi_badi.
+
+        CALL BADI lb_openapi_badi->update_openapi_info_attributes
+          EXPORTING
+            iv_group_id        = me->mv_group_id
+            iv_repository_id   = me->mv_repository
+            iv_service_id      = me->mv_external_service
+            iv_service_version = me->mv_version
+          CHANGING
+            cv_title           = lv_title
+            cv_version         = lv_version
+            cv_description     = lv_description.
+      CATCH cx_badi_context_error
+              cx_badi_filter_error
+              cx_badi_initial_context
+              cx_badi_multiply_implemented
+              cx_badi_not_implemented
+              cx_badi_unknown_error.
+
+    ENDTRY.
 
     lt_parameters = VALUE #( ( name = 'openapi-version' value = '3.0.0' )
                              ( name = 'odata-version' value = '4.0' )
@@ -58,8 +87,8 @@ CLASS ZCL_GW_OPENAPI_META_BASE IMPLEMENTATION.
                              ( name = 'host' value = me->mv_host )
                              ( name = 'basePath' value = '/' && me->mv_path )
                              ( name = 'info-version' value = lv_version )
-                             ( name = 'info-title' value = me->mv_external_service )
-                             ( name = 'info-description' value = me->mv_description )
+                             ( name = 'info-title' value = lv_title )
+                             ( name = 'info-description' value = lv_description )
                              ( name = 'references' value = 'YES' )
                              ( name = 'diagram' value = 'YES' ) ).
 
